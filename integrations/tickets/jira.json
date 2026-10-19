@@ -34,5 +34,40 @@
         "customfield_10051": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406"
       }
     }
+  },
+  "sync": {
+    "needs": "Service desk agent: browse, internal comment, transition. Close value: workflow transition id (GET /rest/api/3/issue/{key}/transitions); without it only a comment is added.",
+    "read": {
+      "path": "/rest/api/3/search/jql?jql=key%20in%20(SEC-142)&fields=status,resolution,updated&maxResults=1"
+    },
+    "note": [
+      {
+        "method": "POST",
+        "path": "/rest/servicedeskapi/request/SEC-142/comment",
+        "body": {
+          "body": "Signal Watch · Updated · r2 · SW-1103",
+          "public": false
+        }
+      }
+    ],
+    "close": [
+      {
+        "method": "POST",
+        "path": "/rest/servicedeskapi/request/SEC-142/comment",
+        "body": {
+          "body": "Signal Watch · Not affected · Version · Aroha T.",
+          "public": false
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/rest/api/3/issue/SEC-142/transitions",
+        "body": {
+          "transition": {
+            "id": "31"
+          }
+        }
+      }
+    ]
   }
 }

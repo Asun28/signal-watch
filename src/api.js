@@ -12,12 +12,17 @@ import { sendDigest } from './routes/digest.js';
 import { aiAvailable } from './ai.js';
 import { nextRunAt } from './time.js';
 import { aliasesFor } from '../public/engine.js';
+import { syncAll, sentinelMode, ticketMode } from './sync.js';
 
 const bad = (msg, status = 400) => json({ error: msg }, status);
+// Background work after the response (sync after a decision); errors are logged, never returned.
+const later = (ctx, p) => { const q = p.catch(e => console.error('sync', e?.stack || e)); if (ctx?.waitUntil) ctx.waitUntil(q); };
 
 // Demo mode (AUTH_MODE=demo, public URL, sample inventory): integration targets stay as deployed, sources cannot
 // be added or re-pointed, and Run now waits DEMO_GAP between runs. Triage, inventory and thresholds stay open.
-const DEMO_LOCKED = ['dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'ticketUrl', 'ticketAuth', 'ticketUser', 'teamsUrl', 'digestTo', 'mailFrom', 'ncscSenders', 'aiEndpoint', 'aiModel', 'aiProvider', 'me'];
+const DEMO_LOCKED = ['dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'wsResource', 'ticketUrl', 'ticketAuth', 'ticketUser', 'ticketClose', 'teamsUrl', 'digestTo', 'mailFrom', 'ncscSenders', 'aiEndpoint', 'aiModel', 'aiProvider', 'me'];
+const SIM_STATES = { incident: ['New', 'Active', 'Closed'], ticket: ['open', 'progress', 'resolved', 'cancelled'] };
+const SIM_CLS = ['TruePositive', 'BenignPositive', 'FalsePositive', 'Undetermined'];
 const DEMO_GAP = 10 * 6e4, DEMO_PRODUCTS = 200;
 
 async function meta(env, store, user) {
@@ -32,6 +37,7 @@ async function meta(env, store, user) {
       teams: !!(S.teamsUrl && (S.teamsUrl.startsWith('env:') ? secret(env, S.teamsUrl) : S.teamsUrl)),
       email: !!(S.digestTo && S.mailFrom), ai: aiAvailable(env, { ...S, ai: true }),
     },
+    sync: { sentinel: sentinelMode(env, S), tickets: ticketMode(env, S), last: await db.getKV(env.DB, 'syncLast', null) },
     parsers: PARSER_NAMES,
   };
 }
@@ -130,16 +136,22 @@ export async function api(request, env, ctx, user) {
     if (b.act === 'ticket') {
       const need = planTickets(s, store.decisions);
       if (!need.length) return json({ exists: true, refs: s.tickets, products: s.products.length });
-      refs = await createTickets(env, st.S, s, need);
+      refs = await createTickets(env, st.S, s, need, undefined, clock(env));
       if (!refs.length) return bad('Ticket failed', 502);
     }
-    const d = { id: /^D-[\w-]{4,40}$/.test(b.id || '') ? b.id : 'D-' + crypto.randomUUID().slice(0, 8), sig: s.id, at: clock(env), by: user || st.S.me || 'Security owner', act: b.act, refs, ...(b.reason ? { reason: String(b.reason).slice(0, 40) } : {}) };
+    const d = { id: /^D-[\w-]{4,40}$/.test(b.id || '') ? b.id : 'D-' + crypto.randomUUID().slice(0, 8), sig: s.id, at: clock(env), by: user || st.S.me || 'Security owner', act: b.act, refs, rev: s.route?.rev || 0, ...(b.reason ? { reason: String(b.reason).slice(0, 40) } : {}) };
     await db.insertDecision(DB, d);
+    later(ctx, syncAll(env, { now: clock(env), sig: s.id, wait: 8000 }));
     return json({ ok: true, decision: d });
   }
 
   mm = path.match(/^\/api\/decisions\/([\w-]+)$/);
-  if (mm && m === 'DELETE') { await db.undoDecision(DB, mm[1]); return json({ ok: true }); }
+  if (mm && m === 'DELETE') {
+    const sig = await DB.prepare('SELECT sig FROM decision WHERE id = ?').bind(mm[1]).first('sig');
+    await db.undoDecision(DB, mm[1]);
+    if (sig) later(ctx, syncAll(env, { now: clock(env), sig, wait: 8000 }));
+    return json({ ok: true });
+  }
   if (mm && m === 'PATCH') { const b = (await body()) || {}; await db.setReason(DB, mm[1], b.reason ? String(b.reason).slice(0, 40) : null); return json({ ok: true }); }
 
   if (path === '/api/run' && m === 'POST') {
@@ -171,6 +183,18 @@ export async function api(request, env, ctx, user) {
     if (env.RUN_FLOW) { const inst = await env.RUN_FLOW.create({ params: { mode: 'Email', push: { src: 'ncsc_mail', items: [item] }, now: clock(env), owner: crypto.randomUUID() } }); return json({ queued: true, id: inst.id }, 202); }
     const r = await runPipeline(env, { mode: 'Email', push: { src: 'ncsc_mail', items: [item] }, wait: 60000, now: clock(env) });
     return json(r);
+  }
+
+  // Two-way sync now (Settings → Sentinel / Tickets), and the sandbox: change a dry-run incident or ticket as if in
+  // Sentinel or the ticket system, then sync that signal.
+  if (path === '/api/sync' && m === 'POST') return json(await syncAll(env, { now: clock(env), wait: 5000 }));
+  if (path === '/api/sim' && m === 'POST') {
+    const b = (await body()) || {};
+    const x = await DB.prepare('SELECT ref, kind, sig FROM sim WHERE ref = ?').bind(String(b.ref || '')).first();
+    if (!x) return bad('Not found', 404);
+    if (!SIM_STATES[x.kind].includes(b.status) || (b.status === 'Closed' && !SIM_CLS.includes(b.cls))) return bad('State');
+    await DB.prepare('UPDATE sim SET status = ?, cls = ?, owner = ?, at = ? WHERE ref = ?').bind(b.status, b.status === 'Closed' ? b.cls : null, 'Sandbox', clock(env), x.ref).run();
+    return json({ ok: true, sync: await syncAll(env, { now: clock(env), sig: x.sig, wait: 5000 }) });
   }
 
   if (path === '/api/digest' && m === 'GET') { const { st } = await state(env); return json(digest(st)); }

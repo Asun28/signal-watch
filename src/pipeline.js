@@ -1,4 +1,4 @@
-// Live pipeline: fetch → parse → dedup → match → enrich → store → group/level (engine) → route → digest.
+// Live pipeline: fetch → parse → dedup → match → enrich → store → group/level (engine) → route → sync → digest.
 // Runs from the cron (daily, Settings → Schedule, NZ time), Run now, and email receipt. Same code path for all.
 // A run is a list of small jobs (one source page, a few NCSC pages, one EPSS page, store, route) so that each fits
 // the Workers Free CPU budget (10 ms) as one Workflow step (src/flow.js). runPipeline() runs the same jobs inline.
@@ -9,6 +9,7 @@ import * as db from './db.js';
 import { sha1hex, secret, chunk } from './util.js';
 import { sendSentinel, sentinelConfigured, recordFor } from './routes/sentinel.js';
 import { createTickets } from './routes/tickets.js';
+import { syncAll } from './sync.js';
 import { aiAvailable, greyPair, extractProduct } from './ai.js';
 import { nzParts } from './time.js';
 
@@ -212,7 +213,10 @@ export async function orchestrate(env, run, step, { parallel = 4 } = {}) {
 
     const seen = [...fresh.map(x => ({ dkey: x.dkey, kept: c.keep(x) })), ...drop.map(dkey => ({ dkey, kept: false }))];
     const runId = await step('store', () => store(env, run, { srcStat, items: kept, seen, epss }));
-    return await step('route', () => finish(env, run, runId, b.t0, kept.length, srcStat));
+    const done = await step('route', () => finish(env, run, runId, b.t0, kept.length, srcStat));
+    // two-way sync for what this run routed or ticketed; a failure here never fails the run
+    await step('sync', () => syncAll(env, { now: run.now, fetch: run.fetch }).catch(e => ({ error: String(e?.message || e) })));
+    return done;
   } finally {
     await step('release', () => db.releaseLock(env.DB, 'run', run.owner).then(() => true));
   }
@@ -256,8 +260,8 @@ export async function rebuildAndRoute(env, { runId = null, now = Date.now(), fet
     if (S.actRoute === 'webhook') {
       for (const x of due) {
         const need = planTickets(x.s, store.decisions);
-        const refs = need.length ? await createTickets(env, S, x.s, need, fetchImpl) : [];
-        if (refs.length) await db.insertDecision(DB, { id: 'D-' + crypto.randomUUID().slice(0, 8), sig: x.s.id, at: now, by: 'Pipeline', act: 'auto', refs });
+        const refs = need.length ? await createTickets(env, S, x.s, need, fetchImpl, now) : [];
+        if (refs.length) await db.insertDecision(DB, { id: 'D-' + crypto.randomUUID().slice(0, 8), sig: x.s.id, at: now, by: 'Pipeline', act: 'auto', refs, rev: x.s.route?.rev || 0 });
         x.rev = x.prev && x.prev.hash === x.hash ? x.prev.rev : (x.prev?.rev || 0) + 1;
         rows.push({ ...x, to: 'webhook', status: 'webhook' });
       }

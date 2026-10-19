@@ -34,5 +34,38 @@
         "sw_cves": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406"
       }
     }
+  },
+  "sync": {
+    "needs": "Agent: view and edit tickets, add private notes. Close value: status (4 Resolved, 5 Closed).",
+    "read": {
+      "path": "/api/v2/tickets/4211"
+    },
+    "note": [
+      {
+        "method": "POST",
+        "path": "/api/v2/tickets/4211/notes",
+        "body": {
+          "body": "Signal Watch · Updated · r2 · SW-1103",
+          "private": true
+        }
+      }
+    ],
+    "close": [
+      {
+        "method": "POST",
+        "path": "/api/v2/tickets/4211/notes",
+        "body": {
+          "body": "Signal Watch · Not affected · Version · Aroha T.",
+          "private": true
+        }
+      },
+      {
+        "method": "PUT",
+        "path": "/api/v2/tickets/4211",
+        "body": {
+          "status": 4
+        }
+      }
+    ]
   }
 }

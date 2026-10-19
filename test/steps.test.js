@@ -42,7 +42,7 @@ test('Steps: a run as Workflow steps gives the same result as the inline run', a
   for (const k of ['items', 'fetched', 'noise', 'created', 'updated', 'hidden', 'routed']) assert.equal(stepped.run[k], inline.run[k], k);
   assert.deepEqual(stepped.open, inline.open);
   assert.deepEqual(names.slice(0, 1), ['begin']);
-  assert.deepEqual(names.slice(-3), ['store', 'route', 'release']);
+  assert.deepEqual(names.slice(-4), ['store', 'route', 'sync', 'release']);
   assert.ok(names.includes('pull circl 1') && names.includes('epss 1') && names.includes('ncsc 1'));
   // the lock is released and re-entrant for the same owner (a retried step keeps it)
   assert.equal(await db.lockHeld(b.DB, 'run'), false);

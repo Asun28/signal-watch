@@ -28,5 +28,31 @@
       "u_act_by": "2026-09-30",
       "u_link": "https://www.ncsc.govt.nz/alerts/multiple-vulnerabilities-affecting-citrix-netscaler-adc-and-netscaler-gateway-products-2/?utm_source=ncsc&utm_medium=email"
     }
+  },
+  "sync": {
+    "needs": "Read incident (number, sys_id, state, sys_updated_on); write work_notes, state, close_code, close_notes (role itil). Close value: close code.",
+    "read": {
+      "path": "/api/now/table/incident?sysparm_query=numberININC0012231&sysparm_fields=sys_id,number,state,sys_updated_on&sysparm_limit=1"
+    },
+    "note": [
+      {
+        "method": "PATCH",
+        "path": "/api/now/table/incident/9d385017c611228701d22104cc95c371",
+        "body": {
+          "work_notes": "Signal Watch · Updated · r2 · SW-1103"
+        }
+      }
+    ],
+    "close": [
+      {
+        "method": "PATCH",
+        "path": "/api/now/table/incident/9d385017c611228701d22104cc95c371",
+        "body": {
+          "state": "6",
+          "close_code": "No resolution provided",
+          "close_notes": "Signal Watch · Not affected · Version · Aroha T."
+        }
+      }
+    ]
   }
 }
