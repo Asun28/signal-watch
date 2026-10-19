@@ -20,7 +20,7 @@ Workspaces (Sources page, or Ctrl+K): **Live** (D1) and two replay sets, **Citri
 ## 2. Tests
 
 ```sh
-npm test                 # 81 tests, node:test, no network
+npm test                 # 85 tests, node:test, no network
 npm run test:rules       # the 35 rule tests only (same as Settings → Tests and /rules)
 ```
 
@@ -32,6 +32,7 @@ npm run test:rules       # the 35 rule tests only (same as Settings → Tests an
 | `test/acceptance.test.js` | A1–A12 below, driving the real Worker over a `node:sqlite` D1 stand-in |
 | `test/steps.test.js` | Workers Free path: a run as Workflow steps (JSON between steps) equals the inline run; Run now → Workflow → status; demo mode locks |
 | `test/sync.test.js` | Two-way sync: sandbox in both directions, no echo, last writer wins, stale revisions, ticket chain to the incident; ServiceNow and Sentinel adapters against faked APIs |
+| `test/vault.test.js` | Write-only secrets: never returned, ciphertext in D1, bound to their host (a changed URL or an edited row stops the token), refs cannot name platform secrets, Worker secret wins, demo locked |
 
 The brief's own A1–A12 list was not in the design project. These are mapped from the brief's hard rules and "Done when"; swap in the official wording if it differs.
 
@@ -72,7 +73,7 @@ npx wrangler deploy                           # prints https://signal-watch.<sub
 
 Set `APP_URL` in `wrangler.jsonc` to that URL (digest links) and deploy again.
 
-Updating an existing deployment: run `npm run db:migrate:remote` before `npx wrangler deploy` whenever `migrations/` has a new file (`0002_sync.sql` adds the two-way sync tables and columns; it only adds, nothing is dropped).
+Updating an existing deployment: run `npm run db:migrate:remote` before `npx wrangler deploy` whenever `migrations/` has a new file (`0002_sync.sql` adds the two-way sync tables and columns, `0003_vault.sql` the write-only secrets table; both only add, nothing is dropped).
 
 ### Access
 
@@ -85,7 +86,26 @@ Updating an existing deployment: run `npm run db:migrate:remote` before `npx wra
 
 Load a real inventory only after switching from `demo` to `access`.
 
-Secrets (only those you use): `SENTINEL_CLIENT_SECRET`, `TICKET_TOKEN`, `TEAMS_WORKFLOW_URL`, `GRAPH_CLIENT_SECRET`, `AZURE_OPENAI_KEY`. Settings hold `env:NAME` references only; secret values never reach the browser or D1.
+### Secrets
+
+Only those you use: `SENTINEL_CLIENT_SECRET`, `TICKET_TOKEN`, `TEAMS_WORKFLOW_URL`, `GRAPH_CLIENT_SECRET`, `AZURE_OPENAI_KEY`. Each can be set in one of two ways:
+
+| Way | How | Shown in Settings |
+| --- | --- | --- |
+| Settings field (write-only) | Paste the value into its field (Sentinel → Client secret, Tickets → Token, Digest → Workflow URL and Graph secret, AI assist → API key) and Save | Saved and the date; never the value. Paste to replace, or Remove |
+| Worker secret | `npx wrangler secret put TICKET_TOKEN` | Worker secret (takes precedence; the field is locked) |
+
+Settings fields need a vault key once:
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))" | npx wrangler secret put SECRETS_KEY
+```
+
+- Values saved in Settings are stored in D1 as AES-GCM ciphertext under `SECRETS_KEY`. No API, page, log or browser storage returns them; settings hold `env:NAME` refs only.
+- The ticket token and the AI key are bound to the host they were saved for. Change the ticket base URL or the AI endpoint and the field shows **URL changed**: the token is not sent anywhere until it is entered again, so a settings change cannot redirect it.
+- Refs cannot name platform values (`SECRETS_KEY`, `BASIC_AUTH`, `ACCESS_*`, bindings): they resolve to nothing.
+- Rotating `SECRETS_KEY` makes saved values unreadable; the fields show **Enter again**.
+- Demo mode locks the fields. Local dev: put `SECRETS_KEY=…` and `AUTH_MODE=none` in `.dev.vars` (git-ignored).
 
 ### Workers Paid (USD 5/month)
 
@@ -95,7 +115,7 @@ Remove the `workflows` block from `wrangler.jsonc` and runs execute inline in on
 
 ### Sentinel (Logs Ingestion API, DCR + Entra app)
 
-1. Entra ID → App registrations → new app "Signal Watch". Create a client secret. `npx wrangler secret put SENTINEL_CLIENT_SECRET`.
+1. Entra ID → App registrations → new app "Signal Watch". Create a client secret and paste it into Settings → Sentinel → Client secret (or `npx wrangler secret put SENTINEL_CLIENT_SECRET`).
 2. Deploy the table, a Direct DCR (it has its own ingestion endpoint, no DCE needed) and the role assignment:
    ```sh
    az deployment group create -g <rg> -f integrations/sentinel/table-dcr.json \
@@ -112,7 +132,7 @@ A row is sent only when `hash(level, CVEs, advisories, source families)` changes
 
 ### Tickets (fallback route, and the T key)
 
-Settings → Tickets: system, base URL, user (Basic auth systems), `env:TICKET_TOKEN`. Templates and auth notes per system are in `integrations/tickets/`. Settings → Sentinel → **Webhook** routes Act signals to tickets instead of Sentinel. The `ticket` table key `(signal, product)` is claimed before each POST, so retries and repeated `T` never duplicate.
+Settings → Tickets: system, base URL, user (Basic auth systems), then the token (write-only, see Secrets). Templates and auth notes per system are in `integrations/tickets/`. Settings → Sentinel → **Webhook** routes Act signals to tickets instead of Sentinel. The `ticket` table key `(signal, product)` is claimed before each POST, so retries and repeated `T` never duplicate.
 
 ### Two-way sync (Sentinel incidents and tickets)
 
@@ -144,7 +164,7 @@ Setup:
 
 ### Digest
 
-- Teams: create a Workflow "When a Teams webhook request is received" → post card to a channel. `npx wrangler secret put TEAMS_WORKFLOW_URL` (Settings keeps `env:TEAMS_WORKFLOW_URL`). Sample card: `integrations/teams/digest-card.sample.json`.
+- Teams: create a Workflow "When a Teams webhook request is received" → post card to a channel. Paste its URL into Settings → Digest → Workflow URL (write-only; the URL carries a signature), or `npx wrangler secret put TEAMS_WORKFLOW_URL`. Sample card: `integrations/teams/digest-card.sample.json`.
 - Email: Graph `sendMail` as one mailbox (Settings → Digest: Email from, Email to; Settings → Sentinel: Tenant ID, Client ID). App permission `Mail.Send`, restricted to that mailbox with an application access policy. Secret `GRAPH_CLIENT_SECRET`.
 
 ### NCSC email fallback
@@ -205,6 +225,9 @@ Products → **Add product** (CPE autocomplete from a local dictionary) or **Imp
 | Sync shows errors | `npx wrangler tail`, look for `sync incident` or `sync ticket`. Sentinel 403: Responder role on the workspace. Ticket 401 or 403: token permissions |
 | Incident not linked | The incident title starts `Signal Watch · SW-` (analytics rule display name); Settings → Sentinel → Two-way badge shows Live |
 | Jira ticket not closed | Settings → Tickets → Close value is the workflow transition id |
+| Secret field shows Needs key | `SECRETS_KEY` Worker secret missing, or not 32 bytes of base64 |
+| Secret field shows URL changed | The base URL or AI endpoint changed since the token was saved; paste the token again |
+| Secret field shows Enter again | `SECRETS_KEY` changed or the stored row was edited; paste the value again |
 | CPU limit exceeded (`exceededCpu`) | `npx wrangler workflows instances describe signal-watch-run <id>` shows the step. Route step: shorten Settings → Data retention, or move to Workers Paid |
 
 ## 10. Files
@@ -219,6 +242,7 @@ Products → **Add product** (CPE autocomplete from a local dictionary) or **Imp
 | `src/pipeline.js` | Run jobs (fetch → dedup → match → enrich → store → rebuild → route) and the driver that runs them inline or as steps |
 | `src/flow.js` | Workflow: each job is one `step.do` |
 | `src/sync.js` | Two-way sync with Sentinel incidents and tickets; sandbox in dry run |
+| `src/vault.js` | Write-only secrets: AES-GCM in D1 under `SECRETS_KEY`, bound to their host |
 | `src/sources/` | Parsers (feeds, EPSS, email) |
 | `src/routes/` | Sentinel, tickets, digest |
 | `src/db.js` | D1 access; `migrations/` schema |

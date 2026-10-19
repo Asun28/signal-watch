@@ -10,6 +10,7 @@ import { sha1hex, secret, chunk } from './util.js';
 import { sendSentinel, sentinelConfigured, recordFor } from './routes/sentinel.js';
 import { createTickets } from './routes/tickets.js';
 import { syncAll } from './sync.js';
+import { loadVault } from './vault.js';
 import { aiAvailable, greyPair, extractProduct } from './ai.js';
 import { nzParts } from './time.js';
 
@@ -40,6 +41,7 @@ async function context(env, run) {
   const DB = env.DB;
   const [stored, inv, sources] = await Promise.all([db.loadSettings(DB), db.loadInventory(DB), db.loadSources(DB)]);
   const S = settingsOf(stored), aliases = aliasesFor(inv), invKeys = new Set(inv.map(productKey));
+  await loadVault(env, S);
   const byId = Object.fromEntries(sources.map(s => [s.id, s]));
   const fam = r => byId[r.src]?.fam || r.src;
   return {
@@ -242,6 +244,7 @@ export async function rebuildAndRoute(env, { runId = null, now = Date.now(), fet
   let { store, dataset } = await db.liveStore(DB);
   let state = buildState(store, dataset);
   const S = state.S;
+  await loadVault(env, S);
 
   if (S.ai && S.aiGroup && state.pendingPairs.length && aiAvailable(env, S)) {
     const asked = [];
