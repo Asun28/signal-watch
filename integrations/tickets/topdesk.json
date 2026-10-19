@@ -34,5 +34,32 @@
         "text1": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406"
       }
     }
+  },
+  "sync": {
+    "needs": "Operator: read and edit incidents (actions, completed).",
+    "read": {
+      "path": "/tas/api/incidents/number/I%202610%20042"
+    },
+    "note": [
+      {
+        "method": "PATCH",
+        "path": "/tas/api/incidents/id/1f4a6b5c-0d3e-4c2b-9a7f-6e5d4c3b2a10",
+        "body": {
+          "action": "Signal Watch · Updated · r2 · SW-1103",
+          "actionInvisibleForCaller": true
+        }
+      }
+    ],
+    "close": [
+      {
+        "method": "PATCH",
+        "path": "/tas/api/incidents/id/1f4a6b5c-0d3e-4c2b-9a7f-6e5d4c3b2a10",
+        "body": {
+          "completed": true,
+          "action": "Signal Watch · Not affected · Version · Aroha T.",
+          "actionInvisibleForCaller": true
+        }
+      }
+    ]
   }
 }

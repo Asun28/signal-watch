@@ -6,6 +6,7 @@ import * as db from './db.js';
 import { nzParts, runDue, digestDue } from './time.js';
 import { sendDigest } from './routes/digest.js';
 import { parseNcscEmail } from './sources/email.js';
+import { syncAll } from './sync.js';
 
 const CSP = "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'";
 
@@ -18,7 +19,8 @@ function secure(res) {
   return r;
 }
 
-// Every 15 min (UTC cron): run once per NZ day at Settings → Schedule, then send the digest at Settings → Digest.
+// Every 15 min (UTC cron): run once per NZ day at Settings → Schedule, send the digest at Settings → Digest, and
+// sync with Sentinel incidents and tickets (src/sync.js).
 export async function tick(env, now = Date.now(), fetchImpl) {
   await db.ensureSeed(env.DB);
   const S = settingsOf(await db.loadSettings(env.DB));
@@ -51,6 +53,7 @@ export async function tick(env, now = Date.now(), fetchImpl) {
     await env.DB.prepare('INSERT OR REPLACE INTO digest (day, at, teams, email) VALUES (?,?,?,?)').bind(day, now, r.teams, r.email).run();
     out.digest = { teams: r.teams, email: r.email };
   }
+  try { out.sync = await syncAll(env, { now, fetch: fetchImpl }); } catch (e) { out.sync = { error: String(e?.message || e) }; }
   return out;
 }
 
@@ -68,7 +71,7 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
-    ctx.waitUntil(tick(env, controller.scheduledTime).then(r => console.log('tick', JSON.stringify({ day: r.day, ran: r.ran, queued: r.queued, digest: r.digest }))).catch(e => console.error('tick', e?.stack || e)));
+    ctx.waitUntil(tick(env, controller.scheduledTime).then(r => console.log('tick', JSON.stringify({ day: r.day, ran: r.ran, queued: r.queued, digest: r.digest, sync: r.sync }))).catch(e => console.error('tick', e?.stack || e)));
   },
 
   // Cloudflare Email Routing → this Worker: NCSC alert emails (fallback when the alerts page is down).

@@ -623,6 +623,12 @@ input[type=range]{accent-color:#5aa0e6}
               <div style="flex:1"></div>
               <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="fingerprint" size="14"></sw-icon>Idempotent · SignalId</span>
             </div>
+            <div style="display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09))">
+              <div style="display:flex;align-items:center;gap:12px"><sw-icon name="arrows-clockwise" size="18"></sw-icon><span style="flex:1;font-weight:500">Two-way</span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)">{{ syncSent }}</span><button role="switch" aria-checked="{{ sw.syncSentinel.on }}" aria-label="Sentinel two-way sync" onClick="{{ sw.syncSentinel.toggle }}" style="position:relative;width:36px;height:20px;border-radius:10px;border:0;padding:0;background:{{ sw.syncSentinel.bg }}"><span style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:light-dark(#fbfcfd,#e9e9ed);transform:{{ sw.syncSentinel.x }};transition:transform .15s"></span></button></div>
+              <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf)">Workspace resource ID<input value="{{ v.wsResource }}" onChange="{{ on.wsResource }}" placeholder="/subscriptions/…/workspaces/…" style="height:34px;padding:0 10px;border-radius:8px;border:1px solid light-dark(rgba(17,20,24,.18),rgba(233,233,237,.16));background:light-dark(#eef1f5,#111418);font-size:12.5px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;min-width:0;color:light-dark(#111418,#e9e9ed)"></label>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-right" size="13"></sw-icon>Out</span><sc-for list="{{ syncMapSOut }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-left" size="13"></sw-icon>In</span><sc-for list="{{ syncMapSIn }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button onClick="{{ syncNow }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Sync now</button><span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">{{ syncLast }}</span></div>
+            </div>
             <div style="display:flex;flex-wrap:wrap;gap:4px"><sc-for list="{{ dcrCols }}" as="dc" hint-placeholder-count="12"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))"><span style="font-weight:500">{{ dc.n }}</span><span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:light-dark(#555d6b,#8d95a3)">{{ dc.t }}</span></span></sc-for></div>
             <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:light-dark(#555d6b,#8d95a3)">Analytics rule</span><pre style="margin:0;padding:12px 14px;border-radius:8px;background:light-dark(#eef1f5,#111418);font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere">{{ kql }}</pre></div>
             <details style="border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09))"><summary style="cursor:pointer;padding:8px 12px;font-size:12px;font-weight:500;color:light-dark(#555d6b,#aab2bf)">Sample record</summary><pre style="margin:0;padding:0 12px 12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere">{{ sentJson }}</pre></details>
@@ -641,6 +647,12 @@ input[type=range]{accent-color:#5aa0e6}
               <div style="flex:1"></div>
               <sc-if value="{{ hasTickTest }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace"><sw-icon name="check-circle" size="14"></sw-icon>{{ tickTest }}</span></sc-if>
               <button onClick="{{ testTicket }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="paper-plane-tilt" size="14"></sw-icon>Test</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09))">
+              <div style="display:flex;align-items:center;gap:12px"><sw-icon name="arrows-clockwise" size="18"></sw-icon><span style="flex:1;font-weight:500">Two-way</span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)">{{ syncTick }}</span><button role="switch" aria-checked="{{ sw.syncTickets.on }}" aria-label="Ticket two-way sync" onClick="{{ sw.syncTickets.toggle }}" style="position:relative;width:36px;height:20px;border-radius:10px;border:0;padding:0;background:{{ sw.syncTickets.bg }}"><span style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:light-dark(#fbfcfd,#e9e9ed);transform:{{ sw.syncTickets.x }};transition:transform .15s"></span></button></div>
+              <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf)">Close value<input value="{{ v.ticketClose }}" onChange="{{ on.ticketClose }}" placeholder="{{ ticketClosePh }}" style="height:34px;padding:0 10px;border-radius:8px;border:1px solid light-dark(rgba(17,20,24,.18),rgba(233,233,237,.16));background:light-dark(#eef1f5,#111418);font-size:12.5px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;min-width:0;color:light-dark(#111418,#e9e9ed)"></label>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-right" size="13"></sw-icon>Out</span><sc-for list="{{ syncMapTOut }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-left" size="13"></sw-icon>In</span><sc-for list="{{ syncMapTIn }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button onClick="{{ syncNow }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Sync now</button><span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">{{ syncLast }}</span></div>
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
               <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:light-dark(#555d6b,#8d95a3)">Template</span><pre style="margin:0;padding:12px 14px;border-radius:8px;background:light-dark(#eef1f5,#111418);font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere">{{ ticketTpl }}</pre></div>
@@ -803,11 +815,17 @@ input[type=range]{accent-color:#5aa0e6}
         <h3 style="margin:0;display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="paper-plane-tilt" size="14"></sw-icon>Routes</h3>
         <sc-if value="{{ d.hasRoute }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09));font-size:13px">
-            <sw-icon name="shield-check" size="16"></sw-icon><span style="font-weight:500">{{ d.routeLabel }}</span><span style="color:light-dark(#555d6b,#8d95a3)">{{ d.routeInc }}</span><span style="flex:1"></span><span style="font-size:12px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ d.routeAt }}</span>
+            <sw-icon name="shield-check" size="16"></sw-icon><span style="font-weight:500">{{ d.routeLabel }}</span><span style="color:light-dark(#555d6b,#8d95a3)">{{ d.routeInc }}</span>
+            <sc-if value="{{ d.hasInc }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)"><sw-icon name="{{ d.incIcon }}" size="12"></sw-icon>{{ d.incState }}</span></sc-if>
+            <span style="flex:1"></span><span style="font-size:12px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ d.routeAt }}</span>
+            <sc-if value="{{ d.incSim }}" hint-placeholder-val="{{ false }}"><span style="flex-basis:100%;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="flask" size="13"></sw-icon>Sandbox<select aria-label="Sandbox incident state" value="{{ d.incVal }}" onChange="{{ d.incSet }}" style="height:26px;padding:0 6px;border-radius:6px;border:1px solid light-dark(rgba(17,20,24,.18),rgba(233,233,237,.16));background:light-dark(#eef1f5,#111418);font-size:12px;color:light-dark(#111418,#e9e9ed)"><option value="New">New</option><option value="Active">Active</option><option value="Closed:TruePositive">Closed · TP</option><option value="Closed:BenignPositive">Closed · Benign</option><option value="Closed:FalsePositive">Closed · FP</option></select><span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;min-width:0;overflow-wrap:anywhere">{{ d.incNote }}</span></span></sc-if>
           </div>
         </sc-if>
         <sc-for list="{{ d.tickets }}" as="tk" hint-placeholder-count="1">
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09));font-size:13px"><sw-icon name="ticket" size="16"></sw-icon><span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px">{{ tk.ref }}</span><span style="color:light-dark(#555d6b,#8d95a3)">{{ tk.product }}</span></div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09));font-size:13px"><sw-icon name="ticket" size="16"></sw-icon><span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px">{{ tk.ref }}</span><span style="color:light-dark(#555d6b,#8d95a3)">{{ tk.product }}</span><span style="flex:1"></span>
+            <sc-if value="{{ tk.hasState }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)"><sw-icon name="{{ tk.stIcon }}" size="12"></sw-icon>{{ tk.state }}</span></sc-if>
+            <sc-if value="{{ tk.sim }}" hint-placeholder-val="{{ false }}"><span style="flex-basis:100%;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="flask" size="13"></sw-icon>Sandbox<select aria-label="Sandbox ticket state" value="{{ tk.simVal }}" onChange="{{ tk.simSet }}" style="height:26px;padding:0 6px;border-radius:6px;border:1px solid light-dark(rgba(17,20,24,.18),rgba(233,233,237,.16));background:light-dark(#eef1f5,#111418);font-size:12px;color:light-dark(#111418,#e9e9ed)"><option value="open">Open</option><option value="progress">In progress</option><option value="resolved">Resolved</option><option value="cancelled">Cancelled</option></select><span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;min-width:0;overflow-wrap:anywhere">{{ tk.note }}</span></span></sc-if>
+          </div>
         </sc-for>
         <sc-if value="{{ d.noRoute }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:light-dark(#555d6b,#8d95a3)">None</div></sc-if>
         <details style="border-radius:8px;box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),rgba(233,233,237,.09))">
@@ -1044,6 +1062,32 @@ class Component extends DCLogic {
   srcOf(id) { const st = this.state.st; return (st && st.SRCS && st.SRCS[id]) || this.E.SRC[id] || null; }
   meName() { return this.isLive() ? (this.live.meta && this.live.meta.user) || 'Security owner' : this.E.ME; }
   statusLabel(x) { return x === 'dry-run' ? 'Dry run' : x === 'error' ? 'Error' : x === 'webhook' ? 'Webhook' : String(x || '—'); }
+  // Two-way sync (live only): incident and ticket state as last read, and sandbox controls in dry run.
+  syncData() { return (this.isLive() && this.live.dataset && this.live.dataset.sync) || null; }
+  viaLabel(v) { return v === 'sentinel' ? 'Sentinel' : String(v); }
+  incVals(s, inc) {
+    if (!inc) return { hasInc: false, incSim: false, incState: '', incIcon: '', incVal: '', incSet: () => {}, incNote: '' };
+    const closed = inc.status === 'Closed', C = { TruePositive: 'TP', BenignPositive: 'Benign', FalsePositive: 'FP' };
+    return {
+      hasInc: true, incState: closed ? 'Closed' + (C[inc.cls] ? ' · ' + C[inc.cls] : '') : inc.status + (inc.owner ? ' · ' + inc.owner : ''),
+      incIcon: closed ? (inc.cls === 'BenignPositive' || inc.cls === 'FalsePositive' ? 'prohibit' : 'check-circle') : inc.status === 'Active' ? 'clock' : 'circle-dashed',
+      incSim: !!inc.sim, incVal: closed ? 'Closed:' + (inc.cls || 'TruePositive') : inc.status, incSet: e => this.simSet('SIM-' + s.id, e.target.value), incNote: inc.note || '',
+    };
+  }
+  ticketVals(t, x) {
+    const L = x && { open: ['Open', 'circle-dashed'], progress: ['In progress', 'clock'], resolved: ['Resolved', 'check-circle'], cancelled: ['Cancelled', 'prohibit'] }[x.state];
+    return { hasState: !!L, state: L ? L[0] : '', stIcon: L ? L[1] : '', sim: !!(x && x.sim), simVal: x ? x.state : 'open', simSet: e => this.simSet(t.ref, e.target.value), note: (x && x.note) || '' };
+  }
+  syncToast(r) { this.toast('arrows-clockwise', r.busy ? 'Busy' : 'Synced', r.busy ? 'Sync' : (r.in || 0) + ' in · ' + ((r.out || 0) + (r.notes || 0)) + ' out'); }
+  async simSet(ref, v) {
+    const [status, cls] = String(v).split(':');
+    try { const r = await this.api('POST', '/api/sim', { ref, status, cls }); await this.refreshLive(); this.syncToast(r.sync || {}); } catch (e) { this.toast('warning', 'Not saved', ref); }
+  }
+  async syncNow() {
+    try { const r = await this.api('POST', '/api/sync'); await this.refreshLive(); this.syncToast(r); } catch (e) { this.toast('warning', 'Sync failed', 'Sync'); }
+  }
+  // A decision is synced in the background; read the result back shortly after.
+  syncSoon() { if (!this.isLive()) return; clearTimeout(this._syt); this._syt = setTimeout(() => this.refreshLive(), 1500); }
   schedLabel(src) { return src.schedule === 'Daily' ? 'Daily ' + this.state.st.S.schedule : src.schedule; }
   lastStat(id) { const runs = this.state.st.runs; for (let i = runs.length - 1; i >= 0; i--) if (runs[i].src && runs[i].src[id]) return { r: runs[i].src[id], at: runs[i].at }; return null; }
   // Settings and inventory follow the store; decisions and sources go through their own endpoints.
@@ -1153,9 +1197,10 @@ class Component extends DCLogic {
       try { r = await this.api('POST', '/api/decisions', { sig: s.id, act }); } catch (e) { this.toast('warning', 'Ticket failed', s.id); return; } finally { this._busyT = false; }
       if (r.exists) { this.toast('ticket', r.products ? 'Exists' : 'No product', (r.refs || []).map(t => t.ref).join(' · ')); return; }
       dec = r.decision;
+      this.syncSoon();
     } else {
       dec = { id: 'D-' + Math.random().toString(36).slice(2, 10), sig: s.id, at: Date.now(), by: (this.live.meta && this.live.meta.user) || E.ME, act, refs: [], ...(reason ? { reason } : {}) };
-      this.api('POST', '/api/decisions', { id: dec.id, sig: s.id, act, reason }).catch(() => this.toast('warning', 'Not saved', s.id));
+      this.api('POST', '/api/decisions', { id: dec.id, sig: s.id, act, reason }).then(() => this.syncSoon(), () => this.toast('warning', 'Not saved', s.id));
     }
     const ids = this.listIds(), i = ids.indexOf(s.id);
     const nextSel = this.state.page === 'today' ? (ids[i + 1] || ids[i - 1] || null) : s.id;
@@ -1165,7 +1210,7 @@ class Component extends DCLogic {
     this.toast(D.icon, D.label, s.id + (dec.refs.length ? ' · ' + dec.refs.map(r => r.ref).join(' · ') : ''), () => this.undo(dec.id));
     if (nextSel && nextSel !== s.id) this.focusRow(nextSel);
   }
-  undo(did) { const d = this.state.store.decisions.find(x => x.id === did); if (!d) return; if (this.isLive()) this.api('DELETE', '/api/decisions/' + did).catch(() => this.toast('warning', 'Not saved', d.sig)); this.patch(x => { x.decisions = x.decisions.filter(y => y.id !== did); }, { sel: d.sig }); this.toast('arrow-counter-clockwise', 'Undone', d.sig); }
+  undo(did) { const d = this.state.store.decisions.find(x => x.id === did); if (!d) return; if (this.isLive()) this.api('DELETE', '/api/decisions/' + did).then(() => this.syncSoon(), () => this.toast('warning', 'Not saved', d.sig)); this.patch(x => { x.decisions = x.decisions.filter(y => y.id !== did); }, { sel: d.sig }); this.toast('arrow-counter-clockwise', 'Undone', d.sig); }
   undoLast() { const t = [...this.state.toasts].reverse().find(x => x.undo); if (t) { this.dropToast(t.id); t.undo(); } }
   setReason(did, r) {
     const cur = this.state.store.decisions.find(y => y.id === did), next = cur && cur.reason === r ? null : r;
@@ -1306,7 +1351,7 @@ class Component extends DCLogic {
     this.patch(x => { x.extraSources = [...(x.extraSources || []), src]; }, { drawer: null, nsf: null });
     this.toast('rss', 'Source added', src.name);
   }
-  demoLocked(k) { return this.isLive() && this.live.meta && this.live.meta.demo && ['dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'ticketUrl', 'ticketAuth', 'ticketUser', 'teamsUrl', 'digestTo', 'mailFrom', 'ncscSenders', 'aiEndpoint', 'aiModel', 'aiProvider'].includes(k); }
+  demoLocked(k) { return this.isLive() && this.live.meta && this.live.meta.demo && ['dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'wsResource', 'ticketUrl', 'ticketAuth', 'ticketUser', 'ticketClose', 'teamsUrl', 'digestTo', 'mailFrom', 'ncscSenders', 'aiEndpoint', 'aiModel', 'aiProvider'].includes(k); }
   setS(k, v) { if (this.demoLocked(k)) { this.toast('lock-simple', 'Locked', 'Demo'); return; } this.patch(x => { x.settings = { ...(x.settings || {}), [k]: v }; }); }
   toggleS(k) {
     const v = !this.state.st.S[k], before = this.state.st;
@@ -1439,13 +1484,13 @@ class Component extends DCLogic {
     ].map(([k, v]) => ({ k, v }));
     const prods = s.products.map(p => { const t = s.tickets.find(x => x.pid === p.id), M = E.MODELS[p.model] || {}; return { name: p.name, version: p.version, owner: p.owner, model: M.label, modelIcon: M.icon, hit: p.hit === true ? 'In range' : p.hit === false ? 'Not in range' : 'Unknown', hitIcon: p.hit === true ? 'warning' : p.hit === false ? 'check' : 'question', hitFg: p.hit === true ? this.lvStyle('act').fg : 'light-dark(#555d6b,#8d95a3)', cond: p.cond, hasCond: !!p.cond, ticket: t ? t.ref : '', hasTicket: !!t }; });
     const hist = [
-      ...s.decisions.map(d => ({ at: d.at, icon: E.DECISIONS[d.act].icon, label: E.DECISIONS[d.act].label + (d.reason ? ' · ' + d.reason : ''), meta: d.by + (d.refs && d.refs.length ? ' · ' + d.refs.map(x => x.ref).join(' ') : '') + (d.sig !== s.id ? ' · ' + d.sig : '') })),
+      ...s.decisions.map(d => ({ at: d.at, icon: E.DECISIONS[d.act].icon, label: E.DECISIONS[d.act].label + (d.reason ? ' · ' + d.reason : ''), meta: d.by + (d.via ? ' · ' + this.viaLabel(d.via) : '') + (d.refs && d.refs.length ? ' · ' + d.refs.map(x => x.ref).join(' ') : '') + (d.sig !== s.id ? ' · ' + d.sig : '') })),
       ...st.routes.filter(x => x.sig === s.id).map(x => ({ at: x.at, icon: 'paper-plane-tilt', label: (x.to === 'webhook' ? 'Webhook r' : 'Sentinel r') + x.rev, meta: x.incident ? 'Incident ' + x.incident : this.statusLabel(x.status) })),
       ...s.levels.map(x => ({ at: x.at, icon: E.LV[x.level].icon, label: 'Level ' + E.LV[x.level].label, meta: '' })),
       ...s.changes.filter(x => x.kind === 'merge').map(x => ({ at: x.at, icon: 'git-merge', label: 'Merged', meta: x.from })),
     ].sort((a, b) => b.at - a.at).map(h => ({ ...h, when: E.fmtDate(h.at) + ' · ' + E.fmtTime(h.at) }));
     const last = s.lastDecision, D = open ? null : E.DECISIONS[s.status];
-    const r = s.route;
+    const r = s.route, sy = this.syncData(), inc = sy && sy.incidents[s.id];
     return {
       id: s.id, title: s.title, link: s.link, lvLabel: L.label, lvIcon: L.icon, lvBg: c.bg, lvTx: c.tx,
       updated: s.updated, hasMerged: s.merged.length > 0, merged: s.merged.join(' · '), flagged: s.flagged,
@@ -1459,7 +1504,8 @@ class Component extends DCLogic {
       fields, cves: cv.map(x => ({ id: x, url: 'https://vulnerability.circl.lu/vuln/' + x.toLowerCase() })), fixes: s.fixes,
       items, itemCount: String(s.items.length),
       hasRoute: !!r, routeLabel: r ? (st.S.actRoute === 'sentinel' ? 'Sentinel' : 'Webhook') + ' · r' + r.rev : '', routeInc: r ? (r.incident ? 'Incident ' + r.incident : this.statusLabel(r.status)) : '', routeAt: r ? E.fmtDate(r.at) + ' · ' + E.fmtTime(r.at) : '',
-      tickets: s.tickets.map(t => ({ ref: t.ref, product: (st.invById[t.pid] || {}).name || t.pid })), noRoute: !r && !s.tickets.length,
+      ...this.incVals(s, inc),
+      tickets: s.tickets.map(t => ({ ref: t.ref, product: (st.invById[t.pid] || {}).name || t.pid, ...this.ticketVals(t, sy && sy.tickets[t.ref]) })), noRoute: !r && !s.tickets.length,
       json: JSON.stringify(E.sentinelRecord(s, st.now), null, 2),
       hist,
       ack: () => this.decide(s.id, 'ack'), na: () => this.decide(s.id, 'na'), ticket: () => this.decide(s.id, 'ticket'),
@@ -1515,7 +1561,7 @@ class Component extends DCLogic {
       const routes = st.routes.filter(r => r.to !== 'webhook').map(r => ({ at: r.at, act: 'auto', sig: r.sig, refs: [{ ref: (r.incident ? 'Incident ' + r.incident : 'Sentinel ' + this.statusLabel(r.status)) + ' · r' + r.rev }], by: 'Pipeline' }));
       const all = [...st.decisions, ...routes].sort((a, b) => b.at - a.at);
       const list = all.filter(d => S.df === 'all' || d.act === S.df);
-      out.deRows = list.map(d => { const D = E.DECISIONS[d.act], s = this.liveSig(d.sig); return { when: E.fmtDate(d.at) + ' · ' + E.fmtTime(d.at), label: D.label + (d.reason ? ' · ' + d.reason : ''), icon: D.icon, fg: d.act === 'auto' ? SFG : 'inherit', sig: d.sig, title: s ? s.title : '—', prods: s ? (s.products.map(p => p.name).join(' · ') || '—') : '—', refs: (d.refs || []).map(r => r.ref).join(' · ') || '—', by: d.by, open: () => { if (s) this.openSig(s.id); } }; });
+      out.deRows = list.map(d => { const D = E.DECISIONS[d.act], s = this.liveSig(d.sig); return { when: E.fmtDate(d.at) + ' · ' + E.fmtTime(d.at), label: D.label + (d.reason ? ' · ' + d.reason : ''), icon: D.icon, fg: d.act === 'auto' ? SFG : 'inherit', sig: d.sig, title: s ? s.title : '—', prods: s ? (s.products.map(p => p.name).join(' · ') || '—') : '—', refs: (d.refs || []).map(r => r.ref).join(' · ') || '—', by: d.by + (d.via ? ' · ' + this.viaLabel(d.via) : ''), open: () => { if (s) this.openSig(s.id); } }; });
       out.deFilters = [['all', 'All'], ['ack', 'Ack'], ['na', 'Not affected'], ['ticket', 'Ticket'], ['auto', 'Auto']].map(([k, l]) => ({ ...chip(S.df === k), label: l, n: String(k === 'all' ? all.length : all.filter(d => d.act === k).length), set: () => this.setState({ df: k }) }));
       out.deCount = String(all.length); out.deEmpty = !list.length; out.exportDecisions = () => this.exportDecisions();
     }
@@ -1528,7 +1574,20 @@ class Component extends DCLogic {
       const num = k => e => this.setS(k, +e.target.value), str = k => e => this.setS(k, e.target.value);
       out.on = { epss: num('epss'), cvss: num('cvss'), actBy: num('actByDays'), archive: num('archiveDays'), jac: num('jaccard'), win: num('windowDays'), look: num('lookbackDays'), emb: num('embedMin'), grey: num('greyMin'), rawDays: num('rawDays'), aiEndpoint: str('aiEndpoint'), aiModel: str('aiModel'), schedule: str('schedule'), dce: str('dce'), dcr: str('dcr'), tenant: str('tenant'), clientId: str('clientId'), secretRef: str('secretRef'), ticketUrl: str('ticketUrl'), ticketAuth: str('ticketAuth'), ticketUser: str('ticketUser'), mailFrom: str('mailFrom'), teamsUrl: str('teamsUrl'), digestTo: str('digestTo'), digestTime: str('digestTime'), ticketSys: str('ticketSys') };
       const sw = k => { const on = !!V[k]; return { on, bg: on ? ACC : OFF, x: on ? 'translateX(16px)' : 'translateX(0)', x2: on ? 'translateX(20px)' : 'translateX(0)', toggle: () => this.toggleS(k) }; };
-      out.sw = { ai: sw('ai'), aiGroup: sw('aiGroup'), aiExtract: sw('aiExtract'), digestTeams: sw('digestTeams'), digestEmail: sw('digestEmail') };
+      out.sw = { ai: sw('ai'), aiGroup: sw('aiGroup'), aiExtract: sw('aiExtract'), digestTeams: sw('digestTeams'), digestEmail: sw('digestEmail'), syncSentinel: sw('syncSentinel'), syncTickets: sw('syncTickets') };
+      Object.assign(out.v, { wsResource: V.wsResource || '', ticketClose: V.ticketClose || '' });
+      Object.assign(out.on, { wsResource: str('wsResource'), ticketClose: str('ticketClose') });
+      const SM = this.isLive() && this.live.meta && this.live.meta.sync, ML = { live: 'Live', sandbox: 'Sandbox', setup: 'Needs workspace', off: 'Off' }, ls = SM && SM.last;
+      out.syncSent = SM ? ML[SM.sentinel] : V.syncSentinel ? 'Live' : 'Off';
+      out.syncTick = SM ? ML[SM.tickets] : V.syncTickets ? 'Live' : 'Off';
+      out.syncLast = ls ? E.fmtTime(ls.at) + ' · ' + ls.in + ' in · ' + (ls.out + ls.notes) + ' out' + (ls.errors ? ' · ' + ls.errors + ' errors' : '') : '—';
+      out.syncNow = () => this.syncNow();
+      const pairs = l => l.map(([a, b]) => ({ a, b }));
+      out.syncMapSOut = pairs([['Not affected', 'Closed · Benign'], ['Ack · Ticket', 'Active'], ['Tickets done', 'Closed · TP'], ['Undo', 'Active']]);
+      out.syncMapSIn = pairs([['Active', 'Ack'], ['Closed · TP', 'Ack'], ['Closed · Benign', 'Not affected'], ['Closed · FP', 'Not affected']]);
+      out.syncMapTOut = pairs([['Not affected', 'Close'], ['New revision', 'Note']]);
+      out.syncMapTIn = pairs([['State', 'Signal panel'], ['All resolved', 'Closed · TP']]);
+      out.ticketClosePh = { servicenow: 'No resolution provided', jira: 'Transition id', freshservice: '4', topdesk: '—' }[V.ticketSys] || '';
       out.aiOp = V.ai ? 1 : 0.55;
       out.aiLocks = [['wrench', 'Fix field', 'Source only'], ['package', 'Inventory', 'Local only'], ['text-aa', 'Model input', 'Headlines only'], ['robot', 'Model calls', st.modelCalls.length + (this.isLive() ? ' calls' : ' this replay')]].map(([icon, k, v]) => ({ icon, k, v }));
       out.lvNow = ['act', 'plan', 'watch', 'info'].map(l => ({ label: E.LV[l].label, icon: E.LV[l].icon, fg: LS(l).fg, n: String(st.open[l]) }));

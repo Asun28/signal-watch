@@ -26,7 +26,7 @@ export async function getKV(db, k, d = null) { const r = await db.prepare('SELEC
 export const putKV = (db, k, v) => db.prepare('INSERT INTO setting (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v').bind(k, JSON.stringify(v)).run();
 
 // Settings hold only what differs from the engine defaults. Secret values are never stored, only env: refs.
-const SETTING_KEYS = new Set(['epss', 'cvss', 'actByDays', 'archiveDays', 'jaccard', 'windowDays', 'lookbackDays', 'perms', 'ai', 'aiGroup', 'aiExtract', 'embedMin', 'greyMin', 'aiEndpoint', 'aiModel', 'aiProvider', 'actRoute', 'ticketSys', 'schedule', 'days', 'digestTime', 'digestTeams', 'digestEmail', 'digestTo', 'mailFrom', 'teamsUrl', 'dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'ticketUrl', 'ticketAuth', 'ticketUser', 'rawDays', 'scope', 'ncscSenders', 'me']);
+const SETTING_KEYS = new Set(['epss', 'cvss', 'actByDays', 'archiveDays', 'jaccard', 'windowDays', 'lookbackDays', 'perms', 'ai', 'aiGroup', 'aiExtract', 'embedMin', 'greyMin', 'aiEndpoint', 'aiModel', 'aiProvider', 'actRoute', 'ticketSys', 'schedule', 'days', 'digestTime', 'digestTeams', 'digestEmail', 'digestTo', 'mailFrom', 'teamsUrl', 'dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'ticketUrl', 'ticketAuth', 'ticketUser', 'rawDays', 'scope', 'ncscSenders', 'me', 'syncSentinel', 'syncTickets', 'wsResource', 'ticketClose']);
 export const loadSettings = db => getKV(db, 'settings', {});
 export function cleanSettings(obj) {
   const out = {};
@@ -75,21 +75,24 @@ export async function saveSource(db, s) {
 }
 
 export async function loadDecisions(db) {
-  return rows(await db.prepare('SELECT id, sig, at, by, act, reason, refs FROM decision WHERE undone_at IS NULL ORDER BY at').all())
-    .map(d => ({ id: d.id, sig: d.sig, at: d.at, by: d.by, act: d.act, refs: parse(d.refs, []), ...(d.reason ? { reason: d.reason } : {}) }));
+  return rows(await db.prepare('SELECT id, sig, at, by, act, reason, refs, via FROM decision WHERE undone_at IS NULL ORDER BY at').all())
+    .map(d => ({ id: d.id, sig: d.sig, at: d.at, by: d.by, act: d.act, refs: parse(d.refs, []), ...(d.reason ? { reason: d.reason } : {}), ...(d.via ? { via: d.via } : {}) }));
 }
-export const insertDecision = (db, d) => db.prepare('INSERT INTO decision (id, sig, at, by, act, reason, refs) VALUES (?,?,?,?,?,?,?)').bind(d.id, d.sig, d.at, d.by, d.act, d.reason || null, JSON.stringify(d.refs || [])).run();
+export const insertDecision = (db, d) => db.prepare('INSERT INTO decision (id, sig, at, by, act, reason, refs, via, rev) VALUES (?,?,?,?,?,?,?,?,?)').bind(d.id, d.sig, d.at, d.by, d.act, d.reason || null, JSON.stringify(d.refs || []), d.via || null, d.rev ?? null).run();
 export const undoDecision = (db, id) => db.prepare('UPDATE decision SET undone_at = ? WHERE id = ? AND undone_at IS NULL').bind(Date.now(), id).run();
 export const setReason = (db, id, reason) => db.prepare('UPDATE decision SET reason = ? WHERE id = ?').bind(reason || null, id).run();
 
 // Live dataset in the shape engine.buildState expects.
 export async function liveDataset(db) {
-  const [rr, ir, sr, ar, src] = await db.batch([
+  const [rr, ir, sr, ar, src, inc, tk, sim] = await db.batch([
     db.prepare('SELECT id, at, mode, ms, stats FROM run ORDER BY at, id'),
     db.prepare('SELECT id, run_id, src, at, title, url, fields FROM item ORDER BY id'),
     db.prepare('SELECT sig, rev, run_id, at, hash, to_sys, status FROM send ORDER BY at, rev'),
     db.prepare('SELECT k, same, conf FROM ai_pair'),
     db.prepare('SELECT id, cfg, enabled FROM source ORDER BY pos, id'),
+    db.prepare('SELECT sig, name, number, status, cls, owner, ext_at FROM incident'),
+    db.prepare('SELECT ref, state, ext_at FROM ticket WHERE ref IS NOT NULL'),
+    db.prepare('SELECT ref, notes FROM sim'),
   ]);
   const byRun = new Map();
   for (const i of rows(ir)) {
@@ -98,9 +101,14 @@ export async function liveDataset(db) {
     byRun.get(i.run_id).push(raw);
   }
   const runs = rows(rr).map(r => { const s = parse(r.stats, {}); return { id: r.id, at: r.at, mode: r.mode, ms: r.ms, items: byRun.get(r.id) || [], srcStat: s.srcStat || {}, epss: s.epss || {}, cvss: s.cvss || {}, noise: {}, status: {} }; });
+  // Two-way sync (src/sync.js): incident and ticket state as last seen; `note` is the last note in the sandbox.
+  const simNote = new Map(rows(sim).map(x => [x.ref, parse(x.notes, []).slice(-1)[0] || null]));
+  const incidents = Object.fromEntries(rows(inc).map(x => [x.sig, { number: x.number, status: x.status, cls: x.cls, owner: x.owner, at: x.ext_at, sim: x.name.startsWith('SIM-'), note: simNote.get(x.name) || null }]));
+  const tickets = Object.fromEntries(rows(tk).map(x => [x.ref, { state: x.state, at: x.ext_at, sim: simNote.has(x.ref), note: simNote.get(x.ref) || null }]));
   return {
     runs,
-    sends: rows(sr).map(x => ({ sig: x.sig, rev: x.rev, run: x.run_id, at: x.at, hash: x.hash, to: x.to_sys, status: x.status })),
+    sends: rows(sr).map(x => ({ sig: x.sig, rev: x.rev, run: x.run_id, at: x.at, hash: x.hash, to: x.to_sys, status: x.status, incident: incidents[x.sig]?.number ?? null })),
+    sync: { incidents, tickets },
     aiPairs: Object.fromEntries(rows(ar).map(x => [x.k, { same: !!x.same, conf: x.conf }])),
     sources: rows(src).map(r => ({ ...parse(r.cfg, {}), id: r.id, enabled: !!r.enabled })),
   };

@@ -1,0 +1,26 @@
+{
+  "needs": "Microsoft Sentinel Responder on the workspace for the Entra app (same tenant, client id and secret as ingestion). Settings → Sentinel → Two-way → Workspace resource ID.",
+  "apiVersion": "2024-09-01",
+  "read": "GET https://management.azure.com{workspace}/providers/Microsoft.SecurityInsights/incidents?$orderby=properties/lastModifiedTimeUtc desc&$top=50&api-version=2024-09-01",
+  "link": "Incident title \"Signal Watch · SW-… · headline\" (analytics rule alertDisplayNameFormat)",
+  "write": [
+    "GET …/incidents/{name}",
+    "PUT …/incidents/{name} { etag, properties: { title, severity, owner, labels, status, classification, classificationReason, classificationComment } }",
+    "PUT …/incidents/{name}/comments/{guid} { properties: { message } }"
+  ],
+  "out": {
+    "Not affected": "Closed · BenignPositive · SuspiciousButExpected",
+    "Acknowledged": "Active",
+    "Ticketed": "Active",
+    "All tickets resolved": "Closed · TruePositive · SuspiciousActivity",
+    "Undo of a close": "Active"
+  },
+  "in": {
+    "Active": "Acknowledged",
+    "Closed · TruePositive": "Acknowledged",
+    "Closed · Undetermined": "Acknowledged",
+    "Closed · BenignPositive": "Not affected",
+    "Closed · FalsePositive": "Not affected"
+  },
+  "comment": "Signal Watch · Not affected · Version · Aroha T."
+}

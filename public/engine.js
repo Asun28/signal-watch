@@ -77,6 +77,8 @@ export const DEFAULT_SETTINGS = {
   dcr: 'dcr-6f1c2b8e4d0a4f7a9c3e5b1d2a7f8e90', stream: 'Custom-SignalWatch_CL', table: 'SignalWatch_CL',
   tenant: '3f0c…e21a', clientId: 'b7d4…90c1', secretRef: 'kv://kv-signalwatch/sentinel-client-secret',
   ticketUrl: 'https://agency.service-now.com', ticketAuth: 'kv://kv-signalwatch/snow-token',
+  syncSentinel: true, syncTickets: true, ticketClose: '',
+  wsResource: '/subscriptions/…/resourceGroups/rg-security/providers/Microsoft.OperationalInsights/workspaces/law-signalwatch',
   rawDays: 90,
 };
 // Live workspace defaults: integration fields start empty (dry-run until configured); secrets are env refs, never values.
@@ -84,7 +86,7 @@ export const LIVE_SETTINGS = {
   aiEndpoint: '', aiModel: '@cf/meta/llama-3.1-8b-instruct-fast', aiProvider: 'workers-ai',
   teamsUrl: 'env:TEAMS_WORKFLOW_URL', digestTo: '', mailFrom: '',
   dce: '', dcr: '', tenant: '', clientId: '', secretRef: 'env:SENTINEL_CLIENT_SECRET',
-  ticketUrl: '', ticketAuth: 'env:TICKET_TOKEN', ticketUser: '',
+  ticketUrl: '', ticketAuth: 'env:TICKET_TOKEN', ticketUser: '', wsResource: '',
   ncscSenders: 'ncsc.govt.nz',
 };
 
