@@ -1,0 +1,97 @@
+{
+  "type": "message",
+  "attachments": [
+    {
+      "contentType": "application/vnd.microsoft.card.adaptive",
+      "content": {
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "type": "AdaptiveCard",
+        "version": "1.4",
+        "body": [
+          {
+            "type": "TextBlock",
+            "text": "Signal Watch · Fri 16 Oct",
+            "weight": "Bolder",
+            "size": "Medium"
+          },
+          {
+            "type": "FactSet",
+            "facts": [
+              {
+                "title": "Act",
+                "value": "2"
+              },
+              {
+                "title": "Plan",
+                "value": "4"
+              },
+              {
+                "title": "Watch",
+                "value": "4"
+              },
+              {
+                "title": "Hidden",
+                "value": "3695"
+              }
+            ]
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Act** · [UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products](https://www.ncsc.govt.nz/alerts/multiple-vulnerabilities-affecting-citrix-netscaler-adc-and-netscaler-gateway-products-2/?utm_source=ncsc&utm_medium=email) · SW-1103"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Act** · [VMware ESXi Out-of-Bounds Write Vulnerability](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?search=CVE-2026-90561) · SW-1141"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Plan** · [MC1190331 · Exchange Online: legacy PowerShell auth retires](https://admin.microsoft.com/#/MessageCenter/:/messages/MC1190331) · SW-1131"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Plan** · [CVE-2026-91877 · Exchange Server: elevation of privilege via EWS](https://vulnerability.circl.lu/vuln/cve-2026-91877) · SW-1143"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Plan** · [CVE-2026-91204 · Veeam Backup & Replication: deserialization to RCE](https://vulnerability.circl.lu/vuln/cve-2026-91204) · SW-1130"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Watch** · [PoC for a WordPress plugin RCE (CVE-2026-90777) is circulating](https://bsky.app/profile/analyst.example/post/3m7c) · SW-1148"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Watch** · [Big spike in FortiGate SSL-VPN brute force from a new botnet this morning](https://bsky.app/profile/nzsec.example/post/3m6p) · SW-1135"
+          },
+          {
+            "type": "TextBlock",
+            "wrap": true,
+            "spacing": "Small",
+            "text": "**Watch** · [Claim · Kererū District Council](https://www.ransomware.live/sample/kereru-dc) · SW-1134"
+          }
+        ],
+        "actions": [
+          {
+            "type": "Action.OpenUrl",
+            "title": "Open Today",
+            "url": "https://signalwatch.example.govt.nz/"
+          }
+        ]
+      }
+    }
+  ]
+}

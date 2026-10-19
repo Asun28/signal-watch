@@ -1,0 +1,38 @@
+{
+  "system": "Freshservice",
+  "method": "POST",
+  "path": "/api/v2/tickets",
+  "auth": "Basic: API key (env:TICKET_TOKEN) + \"X\". Create custom fields sw_key, sw_product, sw_cves.",
+  "idempotencyKey": "{{signal.id}}:{{product.id}}",
+  "body": {
+    "subject": "{{signal.title}}",
+    "priority": "{{level.priority}}",
+    "tags": [
+      "signalwatch",
+      "{{signal.id}}"
+    ],
+    "custom_fields": {
+      "sw_key": "{{signal.id}}:{{product.id}}",
+      "sw_product": "{{product.name}}",
+      "sw_cves": "{{signal.cves}}"
+    }
+  },
+  "example": {
+    "method": "POST",
+    "path": "/api/v2/tickets",
+    "idempotencyKey": "SW-1103:p01",
+    "body": {
+      "subject": "UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products",
+      "priority": "P1",
+      "tags": [
+        "signalwatch",
+        "SW-1103"
+      ],
+      "custom_fields": {
+        "sw_key": "SW-1103:p01",
+        "sw_product": "NetScaler ADC",
+        "sw_cves": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406"
+      }
+    }
+  }
+}

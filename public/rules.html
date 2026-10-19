@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/boot.js"></script>
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rule Tests</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<script src="/icons.js"></script>
+<style>
+html,body{margin:0}
+body{font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;background:#111418;-webkit-font-smoothing:antialiased}
+*,*::before,*::after{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid #5aa0e6;outline-offset:2px}
+a{color:#b9d6f5;text-underline-offset:3px}
+a:hover{color:#eef5fd}
+</style>
+</helmet>
+<div style="color-scheme:dark;min-height:100vh;background:#111418;color:#e9e9ed;padding:28px 28px 56px">
+  <div style="max-width:980px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <a href="/" style="display:inline-flex;align-items:center;gap:6px;font-size:13px"><sw-icon name="arrow-left" size="14"></sw-icon>Signal Watch</a>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+      <h1 style="margin:0;font-size:32px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Rule tests</h1>
+      <span style="font-size:14px;color:#8d95a3;font-variant-numeric:tabular-nums">{{ summary }}</span>
+      <div style="flex:1"></div>
+      <button onClick="{{ rerun }}" style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:8px;border:1px solid #5aa0e6;background:transparent;color:#5aa0e6;font-size:13px;font-weight:500" style-hover="background:rgba(90,160,230,.12)"><sw-icon name="flask" size="15"></sw-icon>Run again</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:8px;background:#1a1e24;box-shadow:{{ g.ring }}">
+          <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#8d95a3">{{ g.g }}</span>
+          <span style="font-size:26px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums">{{ g.score }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+      <section style="display:flex;flex-direction:column;gap:2px">
+        <h2 style="margin:8px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#8d95a3">{{ g.g }}</h2>
+        <sc-for list="{{ g.rows }}" as="t" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:20px 44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 4px;background:linear-gradient(to right,transparent,rgba(233,233,237,.08) 48px,rgba(233,233,237,.08) calc(100% - 48px),transparent) no-repeat bottom/100% 1px">
+            <span style="display:inline-flex;color:{{ t.fg }}"><sw-icon name="{{ t.icon }}" size="16"></sw-icon></span>
+            <span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;color:#8d95a3">{{ t.id }}</span>
+            <span style="font-size:14px">{{ t.name }}</span>
+            <span style="font-size:12px;color:#aab2bf;text-align:right;font-variant-numeric:tabular-nums">{{ t.detail }}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+      <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:#8d95a3">Node</span>
+      <pre style="margin:0;padding:12px 14px;border-radius:8px;background:#1a1e24;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere">npm test</pre>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { res: null, ms: 0 };
+  componentDidMount() { Promise.all([import('./engine.js'), import('./tests.js')]).then(([E, T]) => { this.E = E; this.T = T; this.run(); }); }
+  run() { const t0 = performance.now(); const res = this.T.runTests(this.E); this.setState({ res, ms: Math.max(1, Math.round(performance.now() - t0)) }); }
+  renderVals() {
+    const r = this.state.res || [];
+    const groups = ['Grouping', 'Levels', 'Matching', 'Privacy', 'Routing'].map(g => {
+      const rows = r.filter(t => t.group === g);
+      const pass = rows.filter(t => t.pass).length;
+      return { g, score: pass + '/' + rows.length, ring: rows.length && pass === rows.length ? '0 0 0 1px #5aa0e6, 0 0 22px -10px #5aa0e6' : rows.length ? '0 0 0 1px oklch(0.74 0.13 25)' : '0 0 0 1px #343a44', rows: rows.map(t => ({ id: t.id, name: t.name, detail: t.detail, icon: t.pass ? 'check-circle' : 'x-circle', fg: t.pass ? '#5aa0e6' : 'oklch(0.74 0.13 25)' })) };
+    }).filter(g => g.rows.length);
+    const pass = r.filter(t => t.pass).length;
+    return { groups, summary: r.length ? pass + '/' + r.length + ' pass · ' + this.state.ms + ' ms' : 'Running', rerun: () => this.run() };
+  }
+}
+</script>
+</body>
+</html>

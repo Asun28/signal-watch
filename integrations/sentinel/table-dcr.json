@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": { "description": "Signal Watch → Sentinel: custom table SignalWatch_CL, a Direct DCR (has its own logs ingestion endpoint, no DCE needed) and Monitoring Metrics Publisher for the Entra app." },
+  "parameters": {
+    "workspaceName": { "type": "string", "metadata": { "description": "Log Analytics workspace that Sentinel uses (same resource group)." } },
+    "location": { "type": "string", "defaultValue": "[resourceGroup().location]" },
+    "dcrName": { "type": "string", "defaultValue": "dcr-signalwatch" },
+    "appServicePrincipalObjectId": { "type": "string", "metadata": { "description": "Object id of the Entra app's service principal (Enterprise application) that Signal Watch signs in as." } },
+    "retentionInDays": { "type": "int", "defaultValue": 90 }
+  },
+  "variables": {
+    "columns": [
+      { "name": "TimeGenerated", "type": "datetime" },
+      { "name": "SignalId", "type": "string" },
+      { "name": "Revision", "type": "int" },
+      { "name": "Level", "type": "string" },
+      { "name": "Rule", "type": "string" },
+      { "name": "Title", "type": "string" },
+      { "name": "Cves", "type": "dynamic" },
+      { "name": "Products", "type": "dynamic" },
+      { "name": "Sources", "type": "dynamic" },
+      { "name": "ActBy", "type": "datetime" },
+      { "name": "Link", "type": "string" },
+      { "name": "Updated", "type": "boolean" }
+    ],
+    "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+    "monitoringMetricsPublisher": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '3913510d-42f4-4e42-8a64-420c390055eb')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/tables",
+      "apiVersion": "2022-10-01",
+      "name": "[concat(parameters('workspaceName'), '/SignalWatch_CL')]",
+      "properties": {
+        "plan": "Analytics",
+        "retentionInDays": "[parameters('retentionInDays')]",
+        "schema": { "name": "SignalWatch_CL", "columns": "[variables('columns')]" }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/dataCollectionRules",
+      "apiVersion": "2023-03-11",
+      "name": "[parameters('dcrName')]",
+      "location": "[parameters('location')]",
+      "kind": "Direct",
+      "dependsOn": [ "[resourceId('Microsoft.OperationalInsights/workspaces/tables', parameters('workspaceName'), 'SignalWatch_CL')]" ],
+      "properties": {
+        "streamDeclarations": { "Custom-SignalWatch_CL": { "columns": "[variables('columns')]" } },
+        "destinations": { "logAnalytics": [ { "workspaceResourceId": "[variables('workspaceId')]", "name": "sentinel" } ] },
+        "dataFlows": [ { "streams": [ "Custom-SignalWatch_CL" ], "destinations": [ "sentinel" ], "transformKql": "source", "outputStream": "Custom-SignalWatch_CL" } ]
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[format('Microsoft.Insights/dataCollectionRules/{0}', parameters('dcrName'))]",
+      "name": "[guid(resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName')), parameters('appServicePrincipalObjectId'), 'mmp')]",
+      "dependsOn": [ "[resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName'))]" ],
+      "properties": { "roleDefinitionId": "[variables('monitoringMetricsPublisher')]", "principalId": "[parameters('appServicePrincipalObjectId')]", "principalType": "ServicePrincipal" }
+    }
+  ],
+  "outputs": {
+    "dce": { "type": "string", "metadata": { "description": "Settings → Sentinel → DCE" }, "value": "[reference(resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName')), '2023-03-11').endpoints.logsIngestion]" },
+    "dcr": { "type": "string", "metadata": { "description": "Settings → Sentinel → DCR (immutable id)" }, "value": "[reference(resourceId('Microsoft.Insights/dataCollectionRules', parameters('dcrName')), '2023-03-11').immutableId]" },
+    "stream": { "type": "string", "value": "Custom-SignalWatch_CL" }
+  }
+}

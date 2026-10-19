@@ -1,0 +1,32 @@
+{
+  "system": "ServiceNow",
+  "method": "POST",
+  "path": "/api/now/table/incident",
+  "auth": "Bearer token, or Basic when Settings → Tickets → user is set (user + env:TICKET_TOKEN).",
+  "idempotencyKey": "{{signal.id}}:{{product.id}}",
+  "body": {
+    "short_description": "{{signal.title}}",
+    "correlation_id": "{{signal.id}}:{{product.id}}",
+    "cmdb_ci": "{{product.name}}",
+    "assigned_to": "{{product.owner}}",
+    "urgency": "{{level.urgency}}",
+    "u_cves": "{{signal.cves}}",
+    "u_act_by": "{{signal.actBy}}",
+    "u_link": "{{signal.link}}"
+  },
+  "example": {
+    "method": "POST",
+    "path": "/api/now/table/incident",
+    "idempotencyKey": "SW-1103:p01",
+    "body": {
+      "short_description": "UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products",
+      "correlation_id": "SW-1103:p01",
+      "cmdb_ci": "NetScaler ADC",
+      "assigned_to": "Sam L.",
+      "urgency": "1",
+      "u_cves": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406",
+      "u_act_by": "2026-09-30",
+      "u_link": "https://www.ncsc.govt.nz/alerts/multiple-vulnerabilities-affecting-citrix-netscaler-adc-and-netscaler-gateway-products-2/?utm_source=ncsc&utm_medium=email"
+    }
+  }
+}

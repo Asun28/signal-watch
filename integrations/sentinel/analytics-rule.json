@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": { "description": "Signal Watch: scheduled analytics rule that opens one incident per Act signal. Alerts are grouped by SignalId and closed incidents re-open on a new Revision." },
+  "parameters": {
+    "workspaceName": { "type": "string" },
+    "ruleId": { "type": "string", "defaultValue": "6a3e5d0c-5c1f-4f7e-9d0e-51a7a1c0ac70" }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2023-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/', parameters('ruleId'))]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Signal Watch · Act",
+        "description": "Act-level security signal from Signal Watch (NCSC alert or KEV on a matched product).",
+        "severity": "High",
+        "enabled": true,
+        "query": "SignalWatch_CL\n| summarize arg_max(Revision, *) by SignalId\n| where Level == \"Act\"\n| extend CveList = strcat_array(Cves, \", \"), ProductList = strcat_array(Products, \", \")\n| project TimeGenerated, SignalId, Revision, Title, CveList, ProductList, ActBy, Rule, Link",
+        "queryFrequency": "PT15M",
+        "queryPeriod": "PT30M",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "suppressionEnabled": false,
+        "suppressionDuration": "PT1H",
+        "tactics": [ "InitialAccess" ],
+        "eventGroupingSettings": { "aggregationKind": "AlertPerResult" },
+        "customDetails": { "SignalId": "SignalId", "Revision": "Revision", "Rule": "Rule", "Cves": "CveList", "Products": "ProductList" },
+        "alertDetailsOverride": { "alertDisplayNameFormat": "Signal Watch · {{SignalId}} · {{Title}}", "alertDescriptionFormat": "{{Rule}} · r{{Revision}} · {{ProductList}}" },
+        "entityMappings": [ { "entityType": "URL", "fieldMappings": [ { "identifier": "Url", "columnName": "Link" } ] } ],
+        "incidentConfiguration": {
+          "createIncident": true,
+          "groupingConfiguration": {
+            "enabled": true,
+            "reopenClosedIncident": true,
+            "lookbackDuration": "P7D",
+            "matchingMethod": "Selected",
+            "groupByCustomDetails": [ "SignalId" ],
+            "groupByEntities": [],
+            "groupByAlertDetails": []
+          }
+        }
+      }
+    }
+  ]
+}

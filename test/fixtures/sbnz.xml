@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SecurityBrief New Zealand</title>
+    <description>Technology news for CISOs &amp; cybersecurity decision-makers</description>
+    <link>https://securitybrief.co.nz</link>
+    <language>en</language>
+    <copyright>2026 TechDay, All rights reserved.</copyright>
+    <lastBuildDate>Mon, 19 Oct 2026 14:07:00 +1300</lastBuildDate>
+    <ttl>60</ttl>
+    <atom:link rel="self" type="application/rss+xml" href="https://securitybrief.co.nz/feed"/>
+    <item>
+      <title>Cohesity appoints Matthew Johnston to lead APJ partner sales</title>
+      <link>https://securitybrief.co.nz/story/cohesity-appoints-matthew-johnston-to-lead-apj-partner-sales</link>
+      <description>The hire underscores Cohesity's push to deepen its channel reach across APJ as customers demand stronger cyber resilience and data security.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Mon, 19 Oct 2026 14:07:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/cohesity-appoints-matthew-johnston-to-lead-apj-partner-sales</guid>
+    </item>
+    <item>
+      <title>New Zealand fractional leadership market surges 90%</title>
+      <link>https://securitybrief.co.nz/story/new-zealand-fractional-leadership-market-surges-90</link>
+      <description>Rising demand from smaller firms has pushed more than 1,000 part-time senior executives into New Zealand businesses, with AI roles growing fast.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Mon, 19 Oct 2026 13:57:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/new-zealand-fractional-leadership-market-surges-90</guid>
+    </item>
+    <item>
+      <title>Adactin deploys Copilot Studio support agent for Maxi-Cash</title>
+      <link>https://securitybrief.co.nz/story/adactin-deploys-copilot-studio-support-agent-for-maxi-cash</link>
+      <description>Store staff at Maxi-Cash can now get faster technical help through a Microsoft Copilot Studio bot, after a proof-of-concept programme.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Mon, 19 Oct 2026 13:55:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/adactin-deploys-copilot-studio-support-agent-for-maxi-cash</guid>
+    </item>
+    <item>
+      <title>Boards urged to tighten AI &amp; identity cyber oversight</title>
+      <link>https://securitybrief.co.nz/story/boards-urged-to-tighten-ai-identity-cyber-oversight</link>
+      <description>Boards are being warned that AI, identity and software supply chain gaps are outpacing controls, leaving organisations more exposed to fast-moving attacks.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Mon, 19 Oct 2026 10:30:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/boards-urged-to-tighten-ai-identity-cyber-oversight</guid>
+    </item>
+    <item>
+      <title>Secure.com says ransomware budgets should fix basics first</title>
+      <link>https://securitybrief.co.nz/story/secure-com-says-ransomware-budgets-should-fix-basics-first</link>
+      <description>Most attacks still start with weak credentials, unpatched systems or phishing, so the firm says budgets should shore up basics before AI fears.</description>
+      <author>joseph@techday.com (Joseph Gabriel Lagonsin)</author>
+      <pubDate>Sat, 17 Oct 2026 08:56:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/secure-com-says-ransomware-budgets-should-fix-basics-first</guid>
+    </item>
+    <item>
+      <title>Keeper launches Freshservice workflow for access requests</title>
+      <link>https://securitybrief.co.nz/story/keeper-launches-freshservice-workflow-for-access-requests</link>
+      <description>It aims to cut delays and keep access approvals inside audited tickets, instead of forcing IT teams to move between separate systems.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Sat, 17 Oct 2026 04:30:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/keeper-launches-freshservice-workflow-for-access-requests</guid>
+    </item>
+    <item>
+      <title>Brendan Evers named Chief Executive Officer at Spur</title>
+      <link>https://securitybrief.co.nz/story/brendan-evers-named-chief-executive-officer-at-spur</link>
+      <description>The reshuffle is aimed at helping Spur expand with security and fraud teams as anonymised internet traffic makes traditional signals less reliable.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Sat, 17 Oct 2026 04:00:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/brendan-evers-named-chief-executive-officer-at-spur</guid>
+    </item>
+    <item>
+      <title>Ledger launches Atom security device for AI &amp; crypto</title>
+      <link>https://securitybrief.co.nz/story/ledger-launches-atom-security-device-for-ai-crypto</link>
+      <description>It is aimed at people approving payments, identities and AI tasks on mobiles, with hardware controls designed to block spyware and mistakes.</description>
+      <author>karen@techday.com (Karen Joy Bacudo)</author>
+      <pubDate>Fri, 16 Oct 2026 17:11:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/ledger-launches-atom-security-device-for-ai-crypto</guid>
+    </item>
+    <item>
+      <title>Commvault adds Microsoft 365 tools to spot safe backups</title>
+      <link>https://securitybrief.co.nz/story/commvault-adds-microsoft-365-tools-to-spot-safe-backups</link>
+      <description>The new add-ons aim to help businesses avoid restoring infected files after cyberattacks, as Microsoft 365 remains a prime target for ransomware.</description>
+      <author>mara@techday.com (Mara Sugue)</author>
+      <pubDate>Fri, 16 Oct 2026 15:58:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/commvault-adds-microsoft-365-tools-to-spot-safe-backups</guid>
+    </item>
+    <item>
+      <title>Proofpoint to buy Varonis in USD $6.3 billion deal</title>
+      <link>https://securitybrief.co.nz/story/proofpoint-to-buy-varonis-in-usd-6-3-billion-deal</link>
+      <description>Varonis shareholders will receive USD $49.75 a share in cash, valuing the data security group at a 52% premium and taking it private.</description>
+      <author>seanm@techday.com (Sean Mitchell)</author>
+      <pubDate>Fri, 16 Oct 2026 14:08:00 +1300</pubDate>
+      <category>Technology</category>
+      <guid isPermaLink="true">https://securitybrief.co.nz/story/proofpoint-to-buy-varonis-in-usd-6-3-billion-deal</guid>
+    </item>
+  </channel>
+</rss>

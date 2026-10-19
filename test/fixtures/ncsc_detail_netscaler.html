@@ -1,0 +1,365 @@
+<html><body><main>11V4.29L7 .577z" stroke="#072933" fill-rule="evenodd"></path></svg>
+ <span>TLP Rating:</span><span class="content__detail--tlp-rating">&nbsp;Clear</span>
+            </p>
+        
+    </header>
+
+
+
+			<h2 class="advisory-page-title">UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products</h2>
+			<div class="advisory-page-intro">
+                <p><strong>(Updated on 14-10-2026)&nbsp;</strong><span>A further vulnerability (CVE-2026-107406, CVSS:9.5) has been discovered impacting the same systems. CVE-2026-107406 is a memory overflow vulnerability leading to Remote Code Execution or Denial of Service. Patches for the previous vulnerabilities are still vulnerable to CVE-2026-107406. Organisations that have patched per the original vendor advisory should check the new vendor advisory to see if they are still impacted. Patching is not sufficient to remediate compromised systems.&nbsp;</span><br><br><span>The NCSC is aware of multiple vulnerabilities affecting Citrix NetScaler ADC and Citrix NetScaler Gateway. This impacts NetScaler systems configured for SAML SP or SAMP IdP. At least two of the identified vulnerabilities are under active exploitation.</span></p>
+<ul>
+<li>CVE-2026-88771 (CVSS: 9.5): Unauthenticated remote code execution via improper input validation.</li>
+<li>CVE-2026-88772 (CVSS: 9.5): Memory overflow vulnerability enabling remote code execution or denial of service.</li>
+<li>CVE-2026-88773 (CVSS: 9.3): HTTP request smuggling vulnerability.</li>
+<li>CVE-2026-88774 (CVSS: 7.0): Feature policy bypass vulnerability.</li>
+<li>CVE-2026-88775, CVE-2026-88776, CVE-2026-88777 (CVSS: 8.8): Memory overflow vulnerability causing denial of service.</li>
+<li>CVE-2026-88778 (CVSS: 8.8): TCP sequence number prediction vulnerability.</li>
+</ul>
+<p><span>Citrix have provided additional patching advice for selected vulnerabilities and steps for users to determine if they are running a vulnerable instance in their advisories.</span><br><br><span>The NCSC encourages organisations in New Zealand that use the affected products to review original vendor advisory and the new vendor advisory, applying the remediation as soon as possible. We also urge affected organisations to investigate unauthorised access or compromise of the affected products.</span></p>
+			</div>
+
+            
+                <section id="happening" class="advisory-content">
+                    <h2 class="advisory-sectiontitle">What's happening</h2>
+                    
+<div class="advisory-element pure-g">
+    <div class="pure-u-1 pure-u-lg-3-8">
+        <h3 class="advisory-content-title">Systems affected</h3>
+    </div>
+    <div class="pure-u-1 pure-u-lg-5-8">
+        
+            <div class="advisory-summary">
+                <p><span>The following supported versions of customer-managed Citrix NetScaler ADC and Citrix NetScaler Gateway are affected by the vulnerabilities.</span><br><br><span>For the following versions, applicable only when configured as a SAML IdP:</span></p>
+<ul>
+<li><span>NetScaler ADC and NetScaler Gateway between 14.1-73.37 and 14.1-73.41, inclusive</span></li>
+<li><span>NetScaler ADC 14.1-FIPS between 14.1-73.37 FIPS and 14.1-73.41 FIPS, inclusive</span></li>
+<li><span>NetScaler ADC and NetScaler Gateway between 13.1-64.23 and 13.1-64.28, inclusive</span></li>
+<li>NetScaler ADC 13.1-FIPS between 13.1-NDcPP 13.1-37.279 and 13.1- 37.282, inclusive</li>
+</ul>
+<p></p>
+<p><span>For the following versions, applicable only when configured as a SAML SP or SAML IdP:</span></p>
+<ul>
+<li><span>NetScaler ADC and NetScaler Gateway before 14.1-73.37</span></li>
+<li><span>NetScaler ADC 14.1-FIPS before 14.1-73.37 FIPS</span></li>
+<li><span>NetScaler ADC and NetScaler Gateway before 13.1-64.23</span></li>
+<li><span>NetScaler ADC 13.1-FIPS before 13.1-NDcPP 13.1-37.279</span></li>
+</ul>
+            </div>
+        
+        
+    </div>
+</div>
+
+
+                    
+<div class="advisory-element pure-g">
+    <div class="pure-u-1 pure-u-lg-3-8">
+        <h3 class="advisory-content-title">What this means</h3>
+    </div>
+    <div class="pure-u-1 pure-u-lg-5-8">
+        
+            <div class="advisory-summary">
+                <p><span>Successful exploitation of the identified vulnerabilities could allow an attacker to achieve outcomes ranging from denial of service and security control bypass through to remote code execution. Citrix has reported that exploitation of CVE-2026-88771 and CVE-2026-88772 has been observed in the wild. Organisations using the listed Citrix products should verify their versions and refer to the vendor advisories for further guidance.</span></p>
+            </div>
+        
+        
+    </div>
+</div>
+
+
+                </section>
+            
+
+            
+                <section id="signs" class="advisory-content advisory-content">
+                    <h2 class="advisory-sectiontitle">What to look for</h2>
+                    
+<div class="advisory-element pure-g">
+    <div class="pure-u-1 pure-u-lg-3-8">
+        <h3 class="advisory-content-title">How to tell if you&#039;re at risk</h3>
+    </div>
+    <div class="pure-u-1 pure-u-lg-5-8">
+        
+            <div class="advisory-summary">
+                <p>If you are running a Citrix NetScaler within the version range listed above.</p>
+            </div>
+        
+        
+    </div>
+</div>
+
+
+                    
+<div class="advisory-element pure-g">
+    <div class="pure-u-1 pure-u-lg-3-8">
+        <h3 class="advisory-content-title">How to tell if you&#039;re affected</h3>
+    </div>
+    <div class="pure-u-1 pure-u-lg-5-8">
+        
+            <div class="advisory-summary">
+                <p><span>Refer to the ‘Steps to determine if an appliance meets the CVE preconditions’ section in the original vendor advisory and the new vendor advisory.</span></p>
+            </div>
+        
+        
+    </div>
+</div>
+
+
+                </section>
+            
+
+            
+                <section id="nextsteps" class="advisory-content advisory-content">
+                    <h2 class="advisory-sectiontitle">What to do</h2>
+                    
+<div class="advisory-element pure-g">
+    <div class="pure-u-1 pure-u-lg-3-8">
+        <h3 class="advisory-content-title">Prevention</h3>
+    </div>
+    <div class="pure-u-1 pure-u-lg-5-8">
+        
+            <div class="advisory-summary">
+                <p class="MsoNormal" style="background: white; mso-background-themecolor: background1;"><span style="mso-ascii-font-family: &#039;Open Sans&#039;; mso-hansi-font-family: &#039;Open Sans&#039;; mso-bidi-font-family: &#039;Open Sans&#039;; color: black; mso-themecolor: text1;">To prevent exploitation, the affected Citrix products need to be upgraded to the latest versions per the vendor advisory alongside any custom configurations listed in the advisory for selected CVEs.</span></p>
+<p class="MsoNormal" style="background: white; mso-background-themecolor: background1;"><span style="mso-ascii-font-family: &#039;Open Sans&#039;; mso-hansi-font-family: &#039;Open Sans&#039;; mso-bidi-font-family: &#039;Open Sans&#039;; color: black; mso-themecolor: text1;"><span>Upgrading is not sufficient to remediate compromised systems.</span></span></p>
+<p class="MsoNormal" style="background: white; mso-background-themecolor: background1;"></p>
+            </div>
+        
+        
+    </div>
+</div>
+
+
+                    
+
+                </section>
+            
+
+            
+                <section id="moreinfo" class="advisory-content advisory-content">
+                    <h2 class="advisory-sectiontitle">More information</h2>
+                    <div class="pure-u-1 pure-push-lg-3-8 pure-u-lg-5-8">
+                        <p class="MsoNormal"><span>Read more about this alert on the vendor website:</span></p>
+<p><span><a class="external" rel="external" href="https://support.citrix.com/support-home/kbsearch/article?articleNumber=CTX697096&amp;articleURL=Citrix_NetScaler_ADC_and_Citrix_NetScaler_Gateway_Security_Bulletin_for_CVE_2026_88771_CVE_2026_88772_CVE_2026_88773_CVE_2026_88774_CVE_2026_88775_CVE_2026_88776_CVE_2026_88777_and_CVE_2026_88778" rel="noopener noreferrer" target="_blank">Original CITRIX advisory <span class="nonvisual-indicator"><span class="sr-only">External Link</span><span class="nonvisual-indicator__icon" role="presentation"></span></span> </a> and<a class="external" rel="external" href="https://support.citrix.com/support-home/kbsearch/article?articleNumber=CTX697191" rel="noopener noreferrer" target="_blank"> new CITRIX advisor <span class="nonvisual-indicator"><span class="sr-only">External Link</span><span class="nonvisual-indicator__icon" role="presentation"></span></span> </a>y</span></p>
+<p class="MsoNormal"><span>If you require more information or further support, submit a report on our website:</span></p>
+<p class="MsoNormal"><span><a class="external" class="external" rel="external" href="https://www.ncsc.govt.nz/report/" rel="noopener noreferrer" target="_blank">Report an incident <span class="nonvisual-indicator"><span class="sr-only">External Link</span></span> <span class="nonvisual-indicator"><span class="sr-only">External Link</span><span class="nonvisual-indicator__icon" role="presentation"></span></span> </a></span></p>
+                    </div>
+                </section>
+            
+
+            
+                <div class="container container--content">
+    <div class="feedback feedback-container">
+        <h3 class="feedback__title">How helpful was this page?</h3>
+        <div class="feedback__section" data-feedback-url="https://www.ncsc.govt.nz/alerts/multiple-vulnerabilities-affecting-citrix-netscaler-adc-and-netscaler-gateway-products-2/">
+            
+<form id="FeedbackForm_FeedbackForm" action="/alerts/multiple-vulnerabilities-affecting-citrix-netscaler-adc-and-netscaler-gateway-products-2/submitfeedback/" method="POST" enctype="application/x-www-form-urlencoded" class="feedback__form">
+
+	
+	<p id="FeedbackForm_FeedbackForm_error" class="message " style="display: none"></p>
+	
+
+	<fieldset>
+		
+		
+			<div id="FeedbackForm_FeedbackForm_Rating_Holder" class="field optionsetfieldfeedback feedback__field-rating">
+	<label class="form-label left">Was this helpful?</label>
+	<div class="middleColumn">
+		<div class="optionsetfieldfeedback feedback__field-rating" id="FeedbackForm_FeedbackForm_Rating" aria-label="Rate this page from 1 to 5." 
+>
+    <fieldset>
+    <legend class="radio-group">Radio group</legend>
+    
+        <div class="radio form-check odd val1">
+            <label class="form-check-label">
+                <input class="form-check-input" id="FeedbackForm_FeedbackForm_Rating_1" name="Rating" type="radio" value="1"  />
+                1
+            </label>
+        </div>
+    
+        <div class="radio form-check even val2">
+            <label class="form-check-label">
+                <input class="form-check-input" id="FeedbackForm_FeedbackForm_Rating_2" name="Rating" type="radio" value="2"  />
+                2
+            </label>
+        </div>
+    
+        <div class="radio form-check odd val3">
+            <label class="form-check-label">
+                <input class="form-check-input" id="FeedbackForm_FeedbackForm_Rating_3" name="Rating" type="radio" value="3"  />
+                3
+            </label>
+        </div>
+    
+        <div class="radio form-check even val4">
+            <label class="form-check-label">
+                <input class="form-check-input" id="FeedbackForm_FeedbackForm_Rating_4" name="Rating" type="radio" value="4"  />
+                4
+            </label>
+        </div>
+    
+        <div class="radio form-check odd val5">
+            <label class="form-check-label">
+                <input class="form-check-input" id="FeedbackForm_FeedbackForm_Rating_5" name="Rating" type="radio" value="5"  />
+                5
+            </label>
+        </div>
+    
+    </fieldset>
+</div>
+	</div>
+	
+	
+	
+</div>
+
+		
+			<div id="FeedbackForm_FeedbackForm_RatingExplained1_Holder" class="field optionset checkboxset feedback__field-rating-explained" class="optionset checkboxset feedback__field-rating-explained" id="FeedbackForm_FeedbackForm_RatingExplained1" data-explain="1" data-toggle-show="0" aria-label="What could be improved? How could we do better?">
+	<label class="left" for="FeedbackForm_FeedbackForm_RatingExplained1">What could be improved? How could we do better?</label>
+	<div class="middleColumn">
+		<div class="checkbox form-check odd valIt_wasn_t_helpful_enough">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained1_It_wasn_t_helpful_enough" class="checkbox form-check-input" name="RatingExplained1[It wasn&#039;t helpful enough]" type="checkbox" value="It wasn&#039;t helpful enough" />
+                It wasn&#039;t helpful enough
+            </label>
+        </div>
+    
+        <div class="checkbox form-check even valIt_s_not_what_I_was_looking_for">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained1_It_s_not_what_I_was_looking_for" class="checkbox form-check-input" name="RatingExplained1[It&#039;s not what I was looking for]" type="checkbox" value="It&#039;s not what I was looking for" />
+                It&#039;s not what I was looking for
+            </label>
+        </div>
+    
+        <div class="checkbox form-check odd valI_m_unsure_what_to_do_next">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained1_I_m_unsure_what_to_do_next" class="checkbox form-check-input" name="RatingExplained1[I&#039;m unsure what to do next]" type="checkbox" value="I&#039;m unsure what to do next" />
+                I&#039;m unsure what to do next
+            </label>
+        </div>
+    
+        <div class="checkbox form-check even valIt_s_hard_to_understand">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained1_It_s_hard_to_understand" class="checkbox form-check-input" name="RatingExplained1[It&#039;s hard to understand]" type="checkbox" value="It&#039;s hard to understand" />
+                It&#039;s hard to understand
+            </label>
+        </div>
+    
+        <div class="checkbox form-check odd valOther">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained1_Other" class="checkbox form-check-input" name="RatingExplained1[Other]" type="checkbox" value="Other" />
+                Other
+            </label>
+        </div>
+	</div>
+	
+	
+	
+</div>
+
+		
+			<div id="FeedbackForm_FeedbackForm_RatingExplained2_Holder" class="field optionset checkboxset feedback__field-rating-explained" class="optionset checkboxset feedback__field-rating-explained" id="FeedbackForm_FeedbackForm_RatingExplained2" data-explain="2" data-toggle-show="0" aria-label="What worked well for you?">
+	<label class="left" for="FeedbackForm_FeedbackForm_RatingExplained2">What worked well for you?</label>
+	<div class="middleColumn">
+		<div class="checkbox form-check odd valI_learnt_something_new">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained2_I_learnt_something_new" class="checkbox form-check-input" name="RatingExplained2[I learnt something new]" type="checkbox" value="I learnt something new" />
+                I learnt something new
+            </label>
+        </div>
+    
+        <div class="checkbox form-check even valI_found_what_I_was_looking_for">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained2_I_found_what_I_was_looking_for" class="checkbox form-check-input" name="RatingExplained2[I found what I was looking for]" type="checkbox" value="I found what I was looking for" />
+                I found what I was looking for
+            </label>
+        </div>
+    
+        <div class="checkbox form-check odd valI_know_what_to_do_next">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained2_I_know_what_to_do_next" class="checkbox form-check-input" name="RatingExplained2[I know what to do next]" type="checkbox" value="I know what to do next" />
+                I know what to do next
+            </label>
+        </div>
+    
+        <div class="checkbox form-check even valIt_s_easy_to_understand">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained2_It_s_easy_to_understand" class="checkbox form-check-input" name="RatingExplained2[It&#039;s easy to understand]" type="checkbox" value="It&#039;s easy to understand" />
+                It&#039;s easy to understand
+            </label>
+        </div>
+    
+        <div class="checkbox form-check odd valOther">
+            <label class="form-check-label">
+                <input id="FeedbackForm_FeedbackForm_RatingExplained2_Other" class="checkbox form-check-input" name="RatingExplained2[Other]" type="checkbox" value="Other" />
+                Other
+            </label>
+        </div>
+	</div>
+	
+	
+	
+</div>
+
+		
+			<div id="FeedbackForm_FeedbackForm_Message_Holder" class="field textarea feedback__field-message" name="Message" class="textarea feedback__field-message" id="FeedbackForm_FeedbackForm_Message" placeholder="Add a comment" rows="1" cols="20">
+	<label class="left" for="FeedbackForm_FeedbackForm_Message">Want to tell us more?</label>
+	<div class="middleColumn">
+		<textarea name="Message" class="textarea feedback__field-message" id="FeedbackForm_FeedbackForm_Message" placeholder="Add a comment" rows="1" cols="20"></textarea>
+	</div>
+	
+	
+	
+</div>
+
+		
+			<input type="hidden" name="feedbackID" value="0" class="hidden" id="FeedbackForm_FeedbackForm_feedbackID" />
+		
+			<input type="hidden" name="SecurityID" value="18b2a013ac8baa251cbc943e2cbbb22b9e310c59" class="hidden" id="FeedbackForm_FeedbackForm_SecurityID" />
+		
+			<div id="FeedbackForm_FeedbackForm_Captcha_Holder" class="field customnocaptcha form-group--no-label" type="text" name="Captcha" class="customnocaptcha form-group--no-label" id="FeedbackForm_FeedbackForm_Captcha">
+	
+	<div class="middleColumn">
+		<input type="hidden" id="Nocaptcha-FeedbackForm_FeedbackForm" data-sitekey="6LeJ8F0qAAAAAABoY7xgEF-e9ZYSbmXFCL8XOHcZ" data-action="submit" name="g-recaptcha-response"/>
+
+
+<noscript>
+    <p>You must enable JavaScript to submit this form</p>
+</noscript>
+	</div>
+	
+	
+	
+</div>
+
+		
+		<div class="clear"><!-- --></div>
+	</fieldset>
+
+	
+	<div class="btn-toolbar">
+		
+			<button type="submit" name="action_submitfeedback" value="Share feedback" class="action feedback__submit button button--hero" id="FeedbackForm_FeedbackForm_action_submitfeedback">
+		<span>Share feedback</span>
+	</button>
+		
+	</div>
+	
+
+</form>
+
+
+            <div class="feedback__extra-info">
+                <div class="feedback-disclaimer">If you want to report an incident please use this link to <a href="/report/business-and-individuals/">NCSC</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            
+        </article>
+    </div>
+</div>
+
+        </main></body></html>

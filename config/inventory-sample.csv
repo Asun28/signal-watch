@@ -1,0 +1,31 @@
+name,vendor,cpe,version,owner,model
+NetScaler ADC,Citrix,cpe:2.3:a:citrix:netscaler_application_delivery_controller,14.1-73.41,Sam L.,Self-managed
+NetScaler Gateway,Citrix,cpe:2.3:a:citrix:netscaler_gateway,14.1-73.41,Sam L.,Self-managed
+Citrix Workspace app,Citrix,cpe:2.3:a:citrix:workspace,2409,Ben K.,Self-managed
+FortiGate,Fortinet,cpe:2.3:o:fortinet:fortios,7.4.9,Sam L.,Self-managed
+Windows Server 2022,Microsoft,cpe:2.3:o:microsoft:windows_server_2022,10.0.20348,Priya N.,Self-managed
+Exchange Server,Microsoft,cpe:2.3:a:microsoft:exchange_server,2019 CU15,Priya N.,Self-managed
+VMware ESXi,VMware,cpe:2.3:o:vmware:esxi,8.0 U3,Priya N.,Self-managed
+vCenter Server,VMware,cpe:2.3:a:vmware:vcenter_server,8.0 U3,Priya N.,Self-managed
+Veeam B&R,Veeam,cpe:2.3:a:veeam:veeam_backup_&_replication,12.3,Priya N.,Self-managed
+PaperCut MF,PaperCut,cpe:2.3:a:papercut:papercut_mf,24.1,Ben K.,Self-managed
+WordPress,WordPress,cpe:2.3:a:wordpress:wordpress,6.8.3,Mere W.,Self-managed
+Apache Tomcat,Apache,cpe:2.3:a:apache:tomcat,10.1.44,Mere W.,Self-managed
+Ubuntu Server,Canonical,cpe:2.3:o:canonical:ubuntu_linux,24.04,Priya N.,Self-managed
+ServiceDesk Plus,ManageEngine,cpe:2.3:a:zohocorp:manageengine_servicedesk_plus,14.9,Ben K.,Self-managed
+Catalyst 9300,Cisco,cpe:2.3:o:cisco:ios_xe,17.9.5,Sam L.,Shared
+SQL Server 2019,Microsoft,cpe:2.3:a:microsoft:sql_server_2019,15.0,Priya N.,Shared
+Objective ECM,Objective,,11.2,Mere W.,Shared
+Ci Anywhere,TechnologyOne,,2025B,Mere W.,Shared
+Mimecast,Mimecast,,SaaS,Priya N.,Vendor-managed
+Zoom Workplace,Zoom,cpe:2.3:a:zoom:workplace,SaaS,Ben K.,Vendor-managed
+Jira Cloud,Atlassian,cpe:2.3:a:atlassian:jira,Cloud,Ben K.,Vendor-managed
+Salesforce,Salesforce,,Cloud,Mere W.,Vendor-managed
+Datacom Payroll,Datacom,,SaaS,Aroha T.,Vendor-managed
+RealMe login,DIA,,SaaS,Mere W.,Vendor-managed
+Microsoft 365,Microsoft,,Cloud,Priya N.,Hyperscaler
+Entra ID,Microsoft,,Cloud,Priya N.,Hyperscaler
+Intune,Microsoft,,Cloud,Ben K.,Hyperscaler
+Azure App Service,Microsoft,,Australia East,Mere W.,Hyperscaler
+Azure App Gateway,Microsoft,,Australia East,Sam L.,Hyperscaler
+Amazon S3,AWS,,ap-southeast-2,Mere W.,Hyperscaler

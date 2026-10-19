@@ -1,0 +1,38 @@
+{
+  "system": "TOPdesk",
+  "method": "POST",
+  "path": "/tas/api/incidents",
+  "auth": "Basic: operator login (ticketUser) + application password (env:TICKET_TOKEN).",
+  "idempotencyKey": "{{signal.id}}:{{product.id}}",
+  "body": {
+    "briefDescription": "{{signal.title}}",
+    "externalNumber": "{{signal.id}}:{{product.id}}",
+    "object": {
+      "name": "{{product.name}}"
+    },
+    "priority": {
+      "name": "{{level.priority}}"
+    },
+    "optionalFields1": {
+      "text1": "{{signal.cves}}"
+    }
+  },
+  "example": {
+    "method": "POST",
+    "path": "/tas/api/incidents",
+    "idempotencyKey": "SW-1103:p01",
+    "body": {
+      "briefDescription": "UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products",
+      "externalNumber": "SW-1103:p01",
+      "object": {
+        "name": "NetScaler ADC"
+      },
+      "priority": {
+        "name": "P1"
+      },
+      "optionalFields1": {
+        "text1": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406"
+      }
+    }
+  }
+}

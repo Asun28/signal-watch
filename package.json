@@ -1,0 +1,21 @@
+{
+  "name": "signal-watch",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Security Signal Watch: daily security signals matched to a product inventory, grouped, levelled and routed to Sentinel.",
+  "scripts": {
+    "dev": "wrangler d1 migrations apply signal-watch --local && wrangler dev",
+    "test": "node --test --test-reporter=spec \"test/*.test.js\"",
+    "test:rules": "node --input-type=module -e \"const E=await import('./public/engine.js');const T=await import('./public/tests.js');T.cli(E)\"",
+    "db:migrate:local": "wrangler d1 migrations apply signal-watch --local",
+    "db:migrate:remote": "wrangler d1 migrations apply signal-watch --remote",
+    "icons": "node scripts/vendor-icons.mjs",
+    "templates": "node scripts/export-templates.mjs",
+    "deploy": "wrangler deploy"
+  },
+  "engines": { "node": ">=22.5" },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}

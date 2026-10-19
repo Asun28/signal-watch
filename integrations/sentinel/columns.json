@@ -1,0 +1,50 @@
+[
+  {
+    "name": "TimeGenerated",
+    "type": "datetime"
+  },
+  {
+    "name": "SignalId",
+    "type": "string"
+  },
+  {
+    "name": "Revision",
+    "type": "int"
+  },
+  {
+    "name": "Level",
+    "type": "string"
+  },
+  {
+    "name": "Rule",
+    "type": "string"
+  },
+  {
+    "name": "Title",
+    "type": "string"
+  },
+  {
+    "name": "Cves",
+    "type": "dynamic"
+  },
+  {
+    "name": "Products",
+    "type": "dynamic"
+  },
+  {
+    "name": "Sources",
+    "type": "dynamic"
+  },
+  {
+    "name": "ActBy",
+    "type": "datetime"
+  },
+  {
+    "name": "Link",
+    "type": "string"
+  },
+  {
+    "name": "Updated",
+    "type": "boolean"
+  }
+]

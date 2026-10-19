@@ -1,0 +1,41 @@
+{
+  // Signal Watch: one Worker (UI + API + scheduler + email ingest + run Workflow) and one D1 database.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "signal-watch",
+  "main": "src/main.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // The Worker sees every request first, so auth also covers the UI.
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "signal-watch",
+      "database_id": "d6bb8c0d-e685-47b5-837f-f5afa292493a",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // Cron is UTC. The handler converts to Pacific/Auckland and runs once per day at Settings → Schedule
+  // (default 07:30), so NZST/NZDT changes need no redeploy. The digest goes out at Settings → Digest time.
+  "triggers": { "crons": ["*/15 * * * *"] },
+  // Workers Free: each run is a Workflow, one step per job, so every step fits the 10 ms CPU budget.
+  // Remove this block on Workers Paid to run inline (one invocation, bulk EPSS file allowed).
+  "workflows": [{ "name": "signal-watch-run", "binding": "RUN_FLOW", "class_name": "RunFlow" }],
+  "observability": { "enabled": true },
+  "vars": {
+    // access | basic | demo | none ("none" is refused on any host except localhost; "demo" is open to anyone,
+    // for the sample inventory only)
+    "AUTH_MODE": "demo",
+    "ACCESS_TEAM": "",
+    "ACCESS_AUD": "",
+    "APP_URL": "https://signal-watch.asun28.workers.dev/"
+  }
+  // Optional AI assist (Settings → AI assist, off by default). Uncomment to enable Workers AI:
+  // "ai": { "binding": "AI" }
+  // Secrets (wrangler secret put …): SENTINEL_CLIENT_SECRET, TICKET_TOKEN, TEAMS_WORKFLOW_URL,
+  // GRAPH_CLIENT_SECRET, BASIC_AUTH, AZURE_OPENAI_KEY
+}

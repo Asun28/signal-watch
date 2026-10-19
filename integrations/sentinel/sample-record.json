@@ -1,0 +1,36 @@
+[
+  {
+    "TimeGenerated": "2026-10-15T18:30:00.000Z",
+    "SignalId": "SW-1103",
+    "Revision": 4,
+    "Level": "Act",
+    "Rule": "A1",
+    "Title": "UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products",
+    "Cves": [
+      "CVE-2026-107406",
+      "CVE-2026-88771",
+      "CVE-2026-88772",
+      "CVE-2026-88773",
+      "CVE-2026-88774",
+      "CVE-2026-88775",
+      "CVE-2026-88776",
+      "CVE-2026-88777",
+      "CVE-2026-88778"
+    ],
+    "Products": [
+      "NetScaler ADC",
+      "NetScaler Gateway"
+    ],
+    "Sources": [
+      "bsky",
+      "masto",
+      "kev",
+      "circl",
+      "ncsc",
+      "sbnz"
+    ],
+    "ActBy": "2026-09-30T10:59:00.000Z",
+    "Link": "https://www.ncsc.govt.nz/alerts/multiple-vulnerabilities-affecting-citrix-netscaler-adc-and-netscaler-gateway-products-2/?utm_source=ncsc&utm_medium=email",
+    "Updated": true
+  }
+]

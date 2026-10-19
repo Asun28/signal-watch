@@ -1,0 +1,38 @@
+{
+  "system": "Jira SM",
+  "method": "POST",
+  "path": "/rest/servicedeskapi/request",
+  "auth": "Basic: Atlassian account email (ticketUser) + API token (env:TICKET_TOKEN). Set serviceDeskId / requestTypeId / custom field ids for your site.",
+  "idempotencyKey": "{{signal.id}}:{{product.id}}",
+  "body": {
+    "serviceDeskId": "4",
+    "requestTypeId": "17",
+    "requestFieldValues": {
+      "summary": "{{signal.title}}",
+      "labels": [
+        "signalwatch",
+        "{{signal.id}}"
+      ],
+      "customfield_10050": "{{signal.id}}:{{product.id}}",
+      "customfield_10051": "{{signal.cves}}"
+    }
+  },
+  "example": {
+    "method": "POST",
+    "path": "/rest/servicedeskapi/request",
+    "idempotencyKey": "SW-1103:p01",
+    "body": {
+      "serviceDeskId": "4",
+      "requestTypeId": "17",
+      "requestFieldValues": {
+        "summary": "UPDATED: Multiple vulnerabilities affecting Citrix NetScaler ADC and NetScaler Gateway products",
+        "labels": [
+          "signalwatch",
+          "SW-1103"
+        ],
+        "customfield_10050": "SW-1103:p01",
+        "customfield_10051": "CVE-2026-88771 CVE-2026-88772 CVE-2026-88773 CVE-2026-88774 CVE-2026-88775 CVE-2026-88776 CVE-2026-88777 CVE-2026-88778 CVE-2026-107406"
+      }
+    }
+  }
+}
