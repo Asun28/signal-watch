@@ -25,14 +25,15 @@ export function ensureSeed(db) {
 export async function getKV(db, k, d = null) { const r = await db.prepare('SELECT v FROM setting WHERE k = ?').bind(k).first(); return r ? parse(r.v, d) : d; }
 export const putKV = (db, k, v) => db.prepare('INSERT INTO setting (k, v) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v').bind(k, JSON.stringify(v)).run();
 
-// Settings hold only what differs from the engine defaults. Secret values are never stored, only env: refs.
+// Settings hold only what differs from the engine defaults. Secret values are never stored here, only env: refs
+// (values entered in Settings go to the vault table as ciphertext, src/vault.js).
 const SETTING_KEYS = new Set(['epss', 'cvss', 'actByDays', 'archiveDays', 'jaccard', 'windowDays', 'lookbackDays', 'perms', 'ai', 'aiGroup', 'aiExtract', 'embedMin', 'greyMin', 'aiEndpoint', 'aiModel', 'aiProvider', 'actRoute', 'ticketSys', 'schedule', 'days', 'digestTime', 'digestTeams', 'digestEmail', 'digestTo', 'mailFrom', 'teamsUrl', 'dce', 'dcr', 'stream', 'table', 'tenant', 'clientId', 'secretRef', 'ticketUrl', 'ticketAuth', 'ticketUser', 'rawDays', 'scope', 'ncscSenders', 'me', 'syncSentinel', 'syncTickets', 'wsResource', 'ticketClose']);
 export const loadSettings = db => getKV(db, 'settings', {});
 export function cleanSettings(obj) {
   const out = {};
   for (const [k, v] of Object.entries(obj || {})) {
     if (!SETTING_KEYS.has(k)) continue;
-    if (/^(secretRef|ticketAuth)$/.test(k) && v && !/^env:[A-Z0-9_]+$/.test(v)) continue; // refs only
+    if (/^(secretRef|ticketAuth|teamsUrl)$/.test(k) && v && !/^env:[A-Z0-9_]+$/.test(v)) continue; // refs only
     out[k] = v;
   }
   return out;

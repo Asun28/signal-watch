@@ -33,11 +33,18 @@ export function decodeEntities(s) {
 export const stripTags = s => decodeEntities(String(s || '').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
 export const clip = (s, n = 200) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
 
-// Secrets are referenced as env:NAME in settings and resolved here; values never reach the browser.
+// Secrets are referenced as env:NAME in settings and resolved here: a Worker secret first, then a value saved in
+// Settings (src/vault.js, decrypted per invocation). Values never reach the browser. Bindings and platform
+// settings are not secrets, so no ref can name them (a ticket token ref pointing at SECRETS_KEY resolves to '').
+const NOT_SECRETS = /^(DB|ASSETS|RUN_FLOW|AI|SECRETS_KEY|BASIC_AUTH|AUTH_MODE|ACCESS_[A-Z0-9_]*|APP_URL|FIXED_NOW)$/;
+const VAULT = new WeakMap();
+export const setVault = (env, values) => VAULT.set(env.DB || env, values);
 export function secret(env, ref) {
   if (!ref) return '';
   const m = String(ref).match(/^env:([A-Z0-9_]+)$/);
-  return m ? env[m[1]] || '' : '';
+  if (!m || NOT_SECRETS.test(m[1])) return '';
+  const v = env[m[1]];
+  return typeof v === 'string' && v ? v : VAULT.get(env.DB || env)?.[m[1]] || '';
 }
 
 const BREACH = /\b(breach(?:ed)?|cyber[\s-]?(?:security\s)?incident|cyber[\s-]?attack|ransomware attack|hack(?:ed)?|data leak|leaked data|compromised)\b/i;

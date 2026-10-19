@@ -7,6 +7,7 @@ import { nzParts, runDue, digestDue } from './time.js';
 import { sendDigest } from './routes/digest.js';
 import { parseNcscEmail } from './sources/email.js';
 import { syncAll } from './sync.js';
+import { loadVault } from './vault.js';
 
 const CSP = "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'";
 
@@ -24,6 +25,7 @@ function secure(res) {
 export async function tick(env, now = Date.now(), fetchImpl) {
   await db.ensureSeed(env.DB);
   const S = settingsOf(await db.loadSettings(env.DB));
+  await loadVault(env, S);
   const day = nzParts(now).date;
   const last = await db.getKV(env.DB, 'lastScheduled', null);
   const out = { day, ran: false, digest: null };

@@ -13,6 +13,7 @@ import * as db from './db.js';
 import { settingsOf } from './pipeline.js';
 import { sentinelConfigured, incidentsChanged, updateIncident, WS_RE } from './routes/sentinel.js';
 import { ticketConfigured, ticketStates, ticketWrite } from './routes/tickets.js';
+import { loadVault } from './vault.js';
 
 const DONE = new Set(['resolved', 'cancelled']);
 const IN_NA = { BenignPositive: 'Benign', FalsePositive: 'False positive' };
@@ -69,6 +70,7 @@ export async function syncAll(env, { now = Date.now(), fetch: f, sig = null, wai
   if (!(await lock(DB, owner, wait))) return { busy: true };
   try {
     const S = settingsOf(await db.loadSettings(DB)), L = await load(DB, sig), budget = { n: MAX_WRITES };
+    await loadVault(env, S);
     const out = { at: now, sentinel: sentinelMode(env, S), tickets: ticketMode(env, S), in: 0, out: 0, notes: 0, linked: 0, errors: 0 };
     if (out.tickets !== 'off') await readTickets(env, S, L, out, now, f);
     if (out.sentinel !== 'off' && out.sentinel !== 'setup') {

@@ -13,6 +13,7 @@ import { aiAvailable } from './ai.js';
 import { nextRunAt } from './time.js';
 import { aliasesFor } from '../public/engine.js';
 import { syncAll, sentinelMode, ticketMode } from './sync.js';
+import { loadVault, vaultStatus, saveSecret, removeSecret } from './vault.js';
 
 const bad = (msg, status = 400) => json({ error: msg }, status);
 // Background work after the response (sync after a decision); errors are logged, never returned.
@@ -38,6 +39,7 @@ async function meta(env, store, user) {
       email: !!(S.digestTo && S.mailFrom), ai: aiAvailable(env, { ...S, ai: true }),
     },
     sync: { sentinel: sentinelMode(env, S), tickets: ticketMode(env, S), last: await db.getKV(env.DB, 'syncLast', null) },
+    secrets: await vaultStatus(env, S),
     parsers: PARSER_NAMES,
   };
 }
@@ -55,6 +57,16 @@ export async function api(request, env, ctx, user) {
   await db.ensureSeed(DB);
 
   if (path === '/api/health') return json({ ok: true, at: Date.now() });
+  await loadVault(env, settingsOf(await db.loadSettings(DB)));
+
+  // Write-only secrets (Settings → Sentinel, Tickets, Digest, AI): set or remove; no route returns a value.
+  let sm = path.match(/^\/api\/secrets\/(sentinel|ticket|teams|graph|ai)$/);
+  if (sm && (m === 'PUT' || m === 'DELETE')) {
+    if (demo) return bad('Demo', 403);
+    const S = settingsOf(await db.loadSettings(DB));
+    const r = m === 'PUT' ? await saveSecret(env, S, sm[1], ((await body()) || {}).value, user || S.me) : await removeSecret(env, S, sm[1]);
+    return r.error ? bad(r.error, r.status) : json(r);
+  }
 
   if (path === '/api/live' && m === 'GET') {
     const { store, dataset } = await db.liveStore(DB);
