@@ -106,13 +106,13 @@ input[type=range]{accent-color:#5aa0e6}
         </div>
         <div role="group" aria-label="Levels" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px">
           <sc-for list="{{ tTiles }}" as="tl" hint-placeholder-count="4">
-            <button onClick="{{ tl.onClick }}" aria-pressed="{{ tl.pressed }}" aria-label="{{ tl.aria }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px;border-radius:8px;border:0;background:{{ tl.bg }};box-shadow:{{ tl.ring }};text-align:left;transition:box-shadow .15s" style-hover="box-shadow:0 0 0 1px light-dark(rgba(29,58,88,.4),rgba(185,214,245,.4))">
+            <button onClick="{{ tl.onClick }}" aria-pressed="{{ tl.pressed }}" aria-label="{{ tl.aria }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px;border-radius:8px;border:0;background-color:{{ tl.bg }};color:{{ tl.tx }};box-shadow:{{ tl.ring }};text-align:left;transition:transform .15s" style-hover="background-image:linear-gradient(light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08)) 0 0)" style-active="transform:scale(.96)">
               <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:{{ tl.fg }}"><sw-icon name="{{ tl.icon }}" size="16" weight="{{ tl.weight }}"></sw-icon>{{ tl.label }}</span>
               <span style="display:flex;align-items:flex-end;gap:10px;width:100%"><span style="font-size:30px;line-height:1;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{ tl.count }}</span><span aria-hidden="true" style="flex:1;display:flex;align-items:flex-end;gap:2px;height:22px;max-width:96px;margin-left:auto"><sc-for list="{{ tl.spark }}" as="sp" hint-placeholder-count="14"><span style="flex:1;height:{{ sp.h }};min-height:2px;border-radius:1px;background:{{ sp.c }}"></span></sc-for></span></span>
-              <span style="font-size:11px;color:light-dark(#343a44,#aab2bf);font-variant-numeric:tabular-nums">{{ tl.sub }}</span>
+              <span style="font-size:11px;color:{{ tl.subFg }};font-variant-numeric:tabular-nums">{{ tl.sub }}</span>
             </button>
           </sc-for>
-          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px;border-radius:8px;background:light-dark(#f1f4f7,#1d2229);opacity:.85">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px">
             <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:light-dark(#343a44,#aab2bf)"><sw-icon name="eye-slash" size="16"></sw-icon>Hidden</span>
             <span style="font-size:30px;line-height:1;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:light-dark(#343a44,#cdd3dc)">{{ tHidden }}</span>
             <span style="font-size:11px;color:light-dark(#343a44,#aab2bf)">Count only</span>
@@ -120,9 +120,74 @@ input[type=range]{accent-color:#5aa0e6}
         </div>
       </div>
 
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:14px">
+      <sc-if value="{{ tListMode }}" hint-placeholder-val="{{ true }}">
+      <div style="min-width:0;display:flex;flex-direction:column;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px 2px 18px">
+          <span style="display:inline-flex;align-items:center;gap:6px;color:{{ qFg }}"><sw-icon name="{{ qIcon }}" size="16"></sw-icon><h2 style="margin:0;font-size:13px;font-weight:500">{{ qLabel }}</h2></span>
+          <span style="flex:1"></span>
+          <button onClick="{{ qOpenSignals }}" style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:light-dark(#1d4f86,#b9d6f5);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.14))">View in Signals<sw-icon name="arrow-right" size="14"></sw-icon></button>
+        </div>
+      <div role="listbox" aria-label="Queue" style="display:flex;flex-direction:column;gap:16px;padding:0 6px">
+        <sc-for list="{{ tGroups }}" as="g" hint-placeholder-count="1">
+          <div role="group" aria-label="{{ g.label }}" style="display:flex;flex-direction:column;gap:2px">
+            <sc-if value="{{ g.showHeader }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;padding:2px 12px 6px;color:{{ g.fg }}"><sw-icon name="{{ g.icon }}" size="16"></sw-icon><h2 style="margin:0;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase">{{ g.label }}</h2><span style="font-size:12px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ g.count }}</span></div>
+            </sc-if>
+            <sc-for list="{{ g.rows }}" as="row" hint-placeholder-count="6">
+              <div id="{{ row.domId }}" role="option" aria-selected="{{ row.sel }}" tabIndex="{{ row.tab }}" onClick="{{ row.open }}" onFocus="{{ row.select }}" style="display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;align-items:start;padding:{{ queuePad }};border-radius:8px;cursor:pointer;background-color:{{ row.bgc }};background-image:{{ row.bgi }};background-repeat:no-repeat;background-position:bottom;background-size:100% 1px;box-shadow:{{ row.ring }};transition:background-color .12s,box-shadow .12s" style-hover="background-color:light-dark(rgba(17,20,24,.045),rgba(233,233,237,.045))">
+                <span style="justify-self:start;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;background:{{ row.lvBg }};color:{{ row.lvTx }};white-space:nowrap"><sw-icon name="{{ row.lvIcon }}" size="14"></sw-icon>{{ row.lvLabel }}</span>
+                <span style="min-width:0;display:flex;flex-direction:column;gap:2px">
+                  <span style="display:flex;align-items:flex-start;gap:10px;min-width:0">
+                    <span style="font-size:14px;font-weight:500;line-height:1.38;min-width:0;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty">{{ row.title }}</span>
+                    <sc-if value="{{ row.hasActBy }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums;background:{{ row.abBg }};color:{{ row.abTx }};box-shadow:inset 0 0 0 1px {{ row.abLine }}"><sw-icon name="calendar" size="12"></sw-icon>{{ row.actBy }}</span></sc-if>
+                    <sc-if value="{{ row.isDone }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf);white-space:nowrap"><sw-icon name="{{ row.stIcon }}" size="14"></sw-icon>{{ row.stLabel }}</span></sc-if>
+                  </span>
+                  <span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-height:26px;min-width:0">
+                    <span style="flex:1 1 100px;min-width:0;display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap;font-size:12px;color:light-dark(#555d6b,#8d95a3)">
+                      <sc-if value="{{ row.updated }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd)"><sw-icon name="arrows-clockwise" size="12"></sw-icon>Updated</span></sc-if>
+                      <sc-if value="{{ row.isNew }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;box-shadow:inset 0 0 0 1px light-dark(#2563a8,#5aa0e6);color:light-dark(#1d4f86,#b9d6f5)">New</span></sc-if>
+                      <sc-if value="{{ row.merged }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)"><sw-icon name="git-merge" size="12"></sw-icon>Merged</span></sc-if>
+                      <sc-if value="{{ row.flagged }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(oklch(0.93 0.045 80),oklch(0.34 0.06 75));color:light-dark(oklch(0.4 0.09 70),oklch(0.94 0.05 80))"><sw-icon name="robot" size="12"></sw-icon>AI review</span></sc-if>
+                      <sc-if value="{{ row.sample }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;border:1px dashed light-dark(rgba(17,20,24,.32),rgba(233,233,237,.32));color:light-dark(#555d6b,#aab2bf)">Sample</span></sc-if>
+                      <span style="flex:none;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;color:light-dark(#343a44,#cdd3dc)">{{ row.ids }}</span>
+                      <span style="flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:5px"><sw-icon name="{{ row.prodIcon }}" size="13"></sw-icon><span style="min-width:0;overflow:hidden;text-overflow:ellipsis">{{ row.prods }}</span></span>
+                      <span style="flex:none;display:inline-flex;align-items:center;gap:5px"><sc-for list="{{ row.srcIcons }}" as="si" hint-placeholder-count="2"><span title="{{ si.label }}" style="display:inline-flex"><sw-icon name="{{ si.icon }}" size="13"></sw-icon></span></sc-for><span style="font-variant-numeric:tabular-nums">{{ row.srcN }}</span></span>
+                      <span style="flex:none;font-variant-numeric:tabular-nums">{{ row.when }}</span>
+                    </span>
+                    <sc-if value="{{ row.showActs }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:flex;flex-wrap:wrap;gap:4px">
+                        <button onClick="{{ row.ack }}" title="Acknowledge (A)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;border:1px solid light-dark(rgba(17,20,24,.16),rgba(233,233,237,.18));background:transparent;font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08))"><span style="font-size:11px;color:light-dark(#1d4f86,#b9d6f5)">A</span>Ack</button>
+                        <button onClick="{{ row.na }}" title="Not affected (N)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;border:1px solid light-dark(rgba(17,20,24,.16),rgba(233,233,237,.18));background:transparent;font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08))"><span style="font-size:11px;color:light-dark(#1d4f86,#b9d6f5)">N</span>Not affected</button>
+                        <button onClick="{{ row.ticket }}" title="Ticket (T)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#b9d6f5);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.14))"><span style="font-size:11px">T</span>Ticket</button>
+                      </span>
+                    </sc-if>
+                  </span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+        <sc-if value="{{ tEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px;padding:26px 18px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="check-circle" size="22"></sw-icon><span style="font-size:16px;font-weight:500">{{ qEmpty }}</span></div>
+        </sc-if>
+        <div style="flex:1"></div>
+        <nav aria-label="Queue pages" style="display:flex;align-items:center;gap:10px;margin-top:4px;padding:6px 10px 6px 18px;border-top:1px solid light-dark(rgba(17,20,24,.08),#2a3039);font-size:12px;color:light-dark(#343a44,#cdd3dc);font-variant-numeric:tabular-nums">
+          <span aria-live="polite" style="font-weight:500">{{ qTotal }}</span>
+          <span style="flex:1"></span>
+          <span>{{ qPage }}</span>
+          <span style="display:flex;gap:6px">
+            <button onClick="{{ qPrev }}" disabled="{{ qFirst }}" aria-label="Previous page" title="Previous page" style="display:grid;place-items:center;width:36px;height:36px;border:1px solid light-dark(#858d9b,#6f7785);border-radius:8px;background:transparent" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08))"><sw-icon name="caret-left" size="16"></sw-icon></button>
+            <button onClick="{{ qNext }}" disabled="{{ qLast }}" aria-label="Next page" title="Next page" style="display:grid;place-items:center;width:36px;height:36px;border:1px solid light-dark(#858d9b,#6f7785);border-radius:8px;background:transparent" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08))"><sw-icon name="caret-right" size="16"></sw-icon></button>
+          </span>
+        </nav>
+      </div>
+      </sc-if>
+
       <sc-if value="{{ showCharts }}" hint-placeholder-val="{{ true }}">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px">
-        <figure aria-label="{{ cFunnelAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(max(min(100%,230px),calc(50% - 6px)),1fr));grid-auto-rows:1fr;gap:12px;min-width:0">
+        <figure aria-label="{{ cFunnelAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
           <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="funnel-simple" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">Pipeline</span><span style="flex:1"></span><span style="font-size:11px">Today · log</span></figcaption>
           <div style="display:flex;flex-direction:column;gap:8px">
             <sc-for list="{{ cFunnel }}" as="f" hint-placeholder-count="5">
@@ -135,7 +200,7 @@ input[type=range]{accent-color:#5aa0e6}
           </div>
         </figure>
 
-        <figure aria-label="{{ cTrendAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
+        <figure aria-label="{{ cTrendAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
           <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="chart-bar" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">New signals</span><span style="flex:1"></span><span style="font-size:11px">14 d</span></figcaption>
           <div style="position:relative;display:flex;align-items:flex-end;gap:4px;height:92px;padding-top:4px;background:linear-gradient(to top,light-dark(rgba(17,20,24,.08),rgba(233,233,237,.07)) 1px,transparent 1px) 0 0/100% 33.33%">
             <sc-for list="{{ cTrend }}" as="tc" hint-placeholder-count="14">
@@ -150,18 +215,17 @@ input[type=range]{accent-color:#5aa0e6}
           </div>
         </figure>
 
-        <figure aria-label="{{ cGroupAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
+        <figure aria-label="{{ cGroupAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
           <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="git-merge" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">Grouping</span><span style="flex:1"></span><span style="font-size:11px">All runs</span></figcaption>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:24px;font-weight:500;font-variant-numeric:tabular-nums">{{ cItems }}</span><span style="font-size:11px;color:light-dark(#555d6b,#8d95a3)">Items</span></span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:22px;font-weight:500;font-variant-numeric:tabular-nums">{{ cItems }}</span><span style="font-size:11px;color:light-dark(#555d6b,#8d95a3)">Items</span></span>
             <sw-icon name="arrow-right" size="16"></sw-icon>
-            <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:24px;font-weight:500;font-variant-numeric:tabular-nums">{{ cSigs }}</span><span style="font-size:11px;color:light-dark(#555d6b,#8d95a3)">Signals</span></span>
-            <span style="flex:1"></span>
-            <span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd);font-variant-numeric:tabular-nums">{{ cRatio }}</span>
+            <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:22px;font-weight:500;font-variant-numeric:tabular-nums">{{ cSigs }}</span><span style="font-size:11px;color:light-dark(#555d6b,#8d95a3)">Signals</span></span>
+            <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd);font-variant-numeric:tabular-nums">{{ cRatio }}</span>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
             <sc-for list="{{ cSteps }}" as="cs" hint-placeholder-count="6">
-              <div style="display:grid;grid-template-columns:16px 92px minmax(0,1fr) 28px;gap:8px;align-items:center;font-size:12px;opacity:{{ cs.op }}">
+              <div style="display:grid;grid-template-columns:16px 92px minmax(0,1fr) 34px;gap:8px;align-items:center;font-size:12px;opacity:{{ cs.op }}">
                 <sw-icon name="{{ cs.icon }}" size="13"></sw-icon><span style="color:light-dark(#343a44,#cdd3dc)">{{ cs.label }}</span>
                 <span style="height:8px;border-radius:3px;background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.06));overflow:hidden"><span style="display:block;height:100%;width:{{ cs.w }};background:{{ cs.c }};border-radius:3px"></span></span>
                 <span style="text-align:right;font-variant-numeric:tabular-nums">{{ cs.n }}</span>
@@ -170,8 +234,8 @@ input[type=range]{accent-color:#5aa0e6}
           </div>
         </figure>
 
-        <figure aria-label="{{ cOwnerAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
-          <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="users-three" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">Open by owner</span><span style="flex:1"></span><span style="font-size:11px">Act · Plan · Watch</span></figcaption>
+        <figure aria-label="{{ cOwnerAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
+          <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="users-three" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;white-space:nowrap">Open by owner</span><span style="flex:1"></span><span style="font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Act · Plan · Watch</span></figcaption>
           <div style="display:flex;flex-direction:column;gap:8px">
             <sc-for list="{{ cOwners }}" as="ow" hint-placeholder-count="5">
               <div style="display:grid;grid-template-columns:70px minmax(0,1fr) 24px;gap:10px;align-items:center;font-size:12px">
@@ -185,52 +249,7 @@ input[type=range]{accent-color:#5aa0e6}
         </figure>
       </div>
       </sc-if>
-
-      <sc-if value="{{ tListMode }}" hint-placeholder-val="{{ true }}">
-      <div role="listbox" aria-label="Queue" style="display:flex;flex-direction:column;gap:16px">
-        <sc-for list="{{ tGroups }}" as="g" hint-placeholder-count="1">
-          <div role="group" aria-label="{{ g.label }}" style="display:flex;flex-direction:column;gap:2px">
-            <sc-if value="{{ g.showHeader }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;align-items:center;gap:8px;padding:2px 12px 6px;color:{{ g.fg }}"><sw-icon name="{{ g.icon }}" size="16"></sw-icon><h2 style="margin:0;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase">{{ g.label }}</h2><span style="font-size:12px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ g.count }}</span></div>
-            </sc-if>
-            <sc-for list="{{ g.rows }}" as="row" hint-placeholder-count="6">
-              <div id="{{ row.domId }}" role="option" aria-selected="{{ row.sel }}" tabIndex="{{ row.tab }}" onClick="{{ row.open }}" onFocus="{{ row.select }}" style="display:grid;grid-template-columns:86px minmax(0,1fr) auto;gap:14px;align-items:start;padding:{{ rowPad }};border-radius:8px;cursor:pointer;background-color:{{ row.bgc }};background-image:{{ row.bgi }};background-repeat:no-repeat;background-position:bottom;background-size:100% 1px;box-shadow:{{ row.ring }};transition:background-color .12s,box-shadow .12s" style-hover="background-color:light-dark(rgba(17,20,24,.045),rgba(233,233,237,.045))">
-                <span style="justify-self:start;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;background:{{ row.lvBg }};color:{{ row.lvTx }};white-space:nowrap"><sw-icon name="{{ row.lvIcon }}" size="14"></sw-icon>{{ row.lvLabel }}</span>
-                <span style="min-width:0;display:flex;flex-direction:column;gap:5px">
-                  <span style="display:flex;align-items:flex-start;gap:8px;min-width:0;flex-wrap:wrap">
-                    <span style="font-size:14px;font-weight:500;line-height:1.38;min-width:0;flex:1 1 280px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty">{{ row.title }}</span>
-                    <span style="display:flex;gap:4px;flex-wrap:wrap">
-                      <sc-if value="{{ row.updated }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd);box-shadow:0 0 12px -4px light-dark(#2563a8,#5aa0e6)"><sw-icon name="arrows-clockwise" size="12"></sw-icon>Updated</span></sc-if>
-                      <sc-if value="{{ row.isNew }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;box-shadow:inset 0 0 0 1px light-dark(#2563a8,#5aa0e6);color:light-dark(#1d4f86,#b9d6f5)">New</span></sc-if>
-                      <sc-if value="{{ row.merged }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)"><sw-icon name="git-merge" size="12"></sw-icon>Merged</span></sc-if>
-                      <sc-if value="{{ row.flagged }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(oklch(0.93 0.045 80),oklch(0.34 0.06 75));color:light-dark(oklch(0.4 0.09 70),oklch(0.94 0.05 80))"><sw-icon name="robot" size="12"></sw-icon>AI review</span></sc-if>
-                      <sc-if value="{{ row.sample }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;border:1px dashed light-dark(rgba(17,20,24,.32),rgba(233,233,237,.32));color:light-dark(#555d6b,#aab2bf)">Sample</span></sc-if>
-                    </span>
-                  </span>
-                  <span style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;font-size:12px;color:light-dark(#555d6b,#8d95a3)">
-                    <span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;color:light-dark(#343a44,#cdd3dc)">{{ row.ids }}</span>
-                    <span style="display:inline-flex;align-items:center;gap:5px"><sw-icon name="{{ row.prodIcon }}" size="13"></sw-icon>{{ row.prods }}</span>
-                    <span style="display:inline-flex;align-items:center;gap:5px"><sc-for list="{{ row.srcIcons }}" as="si" hint-placeholder-count="2"><span title="{{ si.label }}" style="display:inline-flex"><sw-icon name="{{ si.icon }}" size="13"></sw-icon></span></sc-for><span style="font-variant-numeric:tabular-nums">{{ row.srcN }}</span></span>
-                    <span style="font-variant-numeric:tabular-nums">{{ row.when }}</span>
-                  </span>
-                </span>
-                <span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:300px">
-                  <sc-if value="{{ row.hasActBy }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums;background:{{ row.abBg }};color:{{ row.abTx }};box-shadow:inset 0 0 0 1px {{ row.abLine }}"><sw-icon name="calendar" size="12"></sw-icon>{{ row.actBy }}</span></sc-if>
-                  <sc-if value="{{ row.isDone }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf);white-space:nowrap"><sw-icon name="{{ row.stIcon }}" size="14"></sw-icon>{{ row.stLabel }}</span></sc-if>
-                  <sc-if value="{{ row.showActs }}" hint-placeholder-val="{{ false }}">
-                    <span style="display:flex;gap:4px">
-                      <button onClick="{{ row.ack }}" title="Acknowledge (A)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;border:1px solid light-dark(rgba(17,20,24,.16),rgba(233,233,237,.18));background:transparent;font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08))"><span style="font-size:11px;color:light-dark(#1d4f86,#b9d6f5)">A</span>Ack</button>
-                      <button onClick="{{ row.na }}" title="Not affected (N)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;border:1px solid light-dark(rgba(17,20,24,.16),rgba(233,233,237,.18));background:transparent;font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08))"><span style="font-size:11px;color:light-dark(#1d4f86,#b9d6f5)">N</span>Not affected</button>
-                      <button onClick="{{ row.ticket }}" title="Ticket (T)" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#b9d6f5);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.14))"><span style="font-size:11px">T</span>Ticket</button>
-                    </span>
-                  </sc-if>
-                </span>
-              </div>
-            </sc-for>
-          </div>
-        </sc-for>
       </div>
-      </sc-if>
 
       <sc-if value="{{ tIsLanes }}" hint-placeholder-val="{{ false }}">
       <div role="listbox" aria-label="Queue" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;align-items:start">
@@ -257,10 +276,6 @@ input[type=range]{accent-color:#5aa0e6}
           </div>
         </sc-for>
       </div>
-      </sc-if>
-
-      <sc-if value="{{ tEmpty }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:10px;padding:26px 12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="check-circle" size="22"></sw-icon><span style="font-size:16px;font-weight:500">All clear</span></div>
       </sc-if>
 
       <sc-if value="{{ keyHints }}" hint-placeholder-val="{{ true }}">
@@ -1017,7 +1032,7 @@ input[type=range]{accent-color:#5aa0e6}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;todayLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Queue&quot;,&quot;Brief&quot;,&quot;Lanes&quot;],&quot;default&quot;:&quot;Queue&quot;,&quot;tsType&quot;:&quot;'Queue' | 'Brief' | 'Lanes'&quot;,&quot;section&quot;:&quot;Today&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Comfortable&quot;,&quot;Compact&quot;],&quot;default&quot;:&quot;Comfortable&quot;,&quot;tsType&quot;:&quot;'Comfortable' | 'Compact'&quot;,&quot;section&quot;:&quot;Today&quot;},&quot;showCharts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Today&quot;},&quot;keyHints&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Today&quot;}}">
 class Component extends DCLogic {
-  state = { ready: false, store: null, st: null, live: false, theme: 'dark', page: 'today', sel: null, drawer: null, pal: false, pq: '', pi: 0, help: false, run: null, toasts: [], doneOpen: false, sq: '', slv: { act: true, plan: true, watch: true, info: true }, sstat: 'open', ssrc: 'all', prq: '', pmodel: 'all', df: 'all', tlv: null, narrow: false, wide: false, collapsed: false, stab: 'levels', form: null, imp: null, nsf: null, srcTest: {}, tests: null, testsMs: 0, sentTest: '', tickTest: '' };
+  state = { ready: false, store: null, st: null, live: false, theme: 'dark', page: 'today', sel: null, drawer: null, pal: false, pq: '', pi: 0, help: false, run: null, toasts: [], doneOpen: false, sq: '', slv: { act: true, plan: true, watch: true, info: true }, sstat: 'open', ssrc: 'all', prq: '', pmodel: 'all', df: 'all', tlv: 'act', tpg: 0, narrow: false, wide: false, collapsed: false, stab: 'levels', form: null, imp: null, nsf: null, srcTest: {}, tests: null, testsMs: 0, sentTest: '', tickTest: '' };
   K = 'signalwatch.pov.v1';
 
   componentDidMount() {
@@ -1135,7 +1150,7 @@ class Component extends DCLogic {
   }
   goLive() {
     if (!this.live) { this.toast('warning', 'Offline', 'Live'); return; }
-    this.commit(this.live.store, { sel: null, drawer: null, tlv: null });
+    this.commit(this.live.store, { sel: null, drawer: null, tlv: 'act', tpg: 0 });
     this.toast('broadcast', 'Live', this.live.dataset.runs.length + ' runs');
   }
   componentWillUnmount() {
@@ -1165,14 +1180,14 @@ class Component extends DCLogic {
     (this._tt = this._tt || []).push(setTimeout(() => this.dropToast(id), 6500));
   }
   dropToast(id) { this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })); }
-  go(page) { this.setState({ page, drawer: null, pal: false, help: false, sel: null }); const m = document.getElementById('sw-main'); if (m) m.scrollTop = 0; }
+  go(page) { this.setState({ page, drawer: null, pal: false, help: false, sel: null, tpg: 0 }); const m = document.getElementById('sw-main'); if (m) m.scrollTop = 0; }
 
   lvStyle(l) {
     const M = {
-      act: { fg: 'light-dark(oklch(0.5 0.15 25),oklch(0.74 0.13 25))', bg: 'light-dark(oklch(0.93 0.035 25),oklch(0.33 0.07 25))', tx: 'light-dark(oklch(0.42 0.13 25),oklch(0.93 0.04 25))' },
-      plan: { fg: 'light-dark(oklch(0.5 0.11 70),oklch(0.8 0.12 75))', bg: 'light-dark(oklch(0.93 0.045 80),oklch(0.34 0.06 75))', tx: 'light-dark(oklch(0.4 0.09 70),oklch(0.94 0.05 80))' },
-      watch: { fg: 'light-dark(#1d4f86,#86bdf0)', bg: 'light-dark(#dde9f6,#1d3a58)', tx: 'light-dark(#1d3a58,#eef5fd)' },
-      info: { fg: 'light-dark(#555d6b,#aab2bf)', bg: 'light-dark(#e3e7ed,#343a44)', tx: 'light-dark(#22272e,#fbfcfd)' },
+      act: { fg: 'light-dark(oklch(0.5 0.15 25),oklch(0.74 0.13 25))', bg: 'light-dark(oklch(0.93 0.035 25),oklch(0.33 0.07 25))', tx: 'light-dark(oklch(0.42 0.13 25),oklch(0.93 0.04 25))', solid: 'light-dark(oklch(0.5 0.17 25),oklch(0.5 0.16 25))' },
+      plan: { fg: 'light-dark(oklch(0.5 0.11 70),oklch(0.8 0.12 75))', bg: 'light-dark(oklch(0.93 0.045 80),oklch(0.34 0.06 75))', tx: 'light-dark(oklch(0.4 0.09 70),oklch(0.94 0.05 80))', solid: 'light-dark(oklch(0.48 0.1 65),oklch(0.48 0.1 65))' },
+      watch: { fg: 'light-dark(#1d4f86,#86bdf0)', bg: 'light-dark(#dde9f6,#1d3a58)', tx: 'light-dark(#1d3a58,#eef5fd)', solid: 'light-dark(#1d4f86,#2563a8)' },
+      info: { fg: 'light-dark(#555d6b,#aab2bf)', bg: 'light-dark(#e3e7ed,#343a44)', tx: 'light-dark(#22272e,#fbfcfd)', solid: 'light-dark(#555d6b,#5d6675)' },
       hidden: { fg: 'light-dark(#555d6b,#8d95a3)', bg: 'light-dark(#e3e7ed,#22272e)', tx: 'light-dark(#343a44,#cdd3dc)' },
     };
     return M[l] || M.info;
@@ -1181,6 +1196,25 @@ class Component extends DCLogic {
     const st = this.state.st; if (!st) return [];
     const t = this.state.tlv;
     return this.E.sortSignals(st.signals.filter(s => s.status === 'open' && !s.ev.archived && (t ? s.level === t : s.level !== 'info')));
+  }
+  // The Today queue is paged, except in the Lanes layout.
+  PAGE = 5;
+  pageCount(n) { return Math.max(1, Math.ceil(n / this.PAGE)); }
+  todayPage(n) { return Math.min(this.state.tpg, this.pageCount(n) - 1); }
+  setPage(p) { this.setState({ tpg: p, sel: null }); }
+  // Keep the selected row on the visible page after J/K, a decision, undo or a refresh.
+  componentDidUpdate() {
+    const S = this.state;
+    if (!S.sel || !S.st || S.page !== 'today') return;
+    const tl = this.todayList(), i = tl.findIndex(s => s.id === S.sel);
+    if (i < 0) return;
+    const p = Math.floor(i / this.PAGE);
+    if (p !== this.todayPage(tl.length)) this.setState({ tpg: p });
+  }
+  openInSignals() {
+    const t = this.state.tlv;
+    this.go('signals');
+    this.setState({ slv: Object.fromEntries(['act', 'plan', 'watch', 'info'].map(l => [l, t ? l === t : l !== 'info'])), sstat: 'open', ssrc: 'all', sq: '' });
   }
   signalList() {
     const st = this.state.st; if (!st) return [];
@@ -1194,7 +1228,8 @@ class Component extends DCLogic {
   move(d) {
     const ids = this.listIds(); if (!ids.length) return;
     let i = ids.indexOf(this.state.sel);
-    i = i < 0 ? (d > 0 ? 0 : ids.length - 1) : Math.max(0, Math.min(ids.length - 1, i + d));
+    const paged = this.state.page === 'today' && this.props.todayLayout !== 'Lanes', from = paged ? this.todayPage(ids.length) * this.PAGE : 0;
+    i = i < 0 ? (d > 0 ? from : Math.min(ids.length, paged ? from + this.PAGE : ids.length) - 1) : Math.max(0, Math.min(ids.length - 1, i + d));
     const id = ids[i];
     this.setState(s => ({ sel: id, drawer: s.drawer && s.drawer.kind === 'sig' ? { kind: 'sig', id } : s.drawer }), () => this.focusRow(id));
   }
@@ -1306,8 +1341,8 @@ class Component extends DCLogic {
     this._rt = setTimeout(() => this.setState(s => (s.run && s.run.done ? { run: null } : null)), 7000);
   }
   setRun(idx) { const cur = this.state.st.runIdx; this.patch(x => { x.runIdx = idx; if (idx < cur) { const now = this.E.buildState(x).now; x.decisions = x.decisions.filter(d => d.fixture || d.at <= now); } }, { sel: null }); }
-  loadReplay(id) { const k = this.isLive() ? this.rstore || this.state.store : this.state.store, s = this.E.freshStore(id); s.inventory = k.inventory; s.settings = k.settings; s.sources = k.sources; s.extraSources = k.extraSources; this.commit(s, { sel: null, drawer: null, tlv: null }); this.toast('clock-counter-clockwise', 'Replay loaded', this.E.REPLAYS[id].name); }
-  resetDemo() { const id = this.isLive() ? (this.rstore && this.rstore.replay) || 'netscaler' : this.state.store.replay; this.commit(this.E.freshStore(id), { sel: null, drawer: null, tlv: null }); this.toast('arrow-counter-clockwise', 'Demo reset', this.E.REPLAYS[id].name); }
+  loadReplay(id) { const k = this.isLive() ? this.rstore || this.state.store : this.state.store, s = this.E.freshStore(id); s.inventory = k.inventory; s.settings = k.settings; s.sources = k.sources; s.extraSources = k.extraSources; this.commit(s, { sel: null, drawer: null, tlv: 'act', tpg: 0 }); this.toast('clock-counter-clockwise', 'Replay loaded', this.E.REPLAYS[id].name); }
+  resetDemo() { const id = this.isLive() ? (this.rstore && this.rstore.replay) || 'netscaler' : this.state.store.replay; this.commit(this.E.freshStore(id), { sel: null, drawer: null, tlv: 'act', tpg: 0 }); this.toast('arrow-counter-clockwise', 'Demo reset', this.E.REPLAYS[id].name); }
 
   newProduct() { this.setState({ drawer: { kind: 'prod' }, form: { id: null, name: '', vendor: '', cpe: '', version: '', owner: this.E.ME, model: 'self', sugg: [], err: {} } }); }
   editProduct(id) { const p = this.state.store.inventory.find(x => x.id === id); if (p) this.setState({ drawer: { kind: 'prod', id }, form: { ...p, sugg: [], err: {} } }); }
@@ -1428,7 +1463,7 @@ class Component extends DCLogic {
       { key: 'a-tests', icon: 'flask', label: 'Rule tests', sub: '', run: () => { this.go('settings'); this.setState({ stab: 'tests' }); this.runTests(); } },
       { key: 'a-reset', icon: 'arrow-counter-clockwise', label: 'Reset demo', sub: '', run: () => this.resetDemo() },
     ].map(a => ({ ...a, group: 'Actions' }));
-    const sigs = E.sortSignals(st.signals).map(s => ({ key: 's-' + s.id, group: 'Signals', icon: E.LV[s.level].icon, label: s.id, sub: s.title, open: s.status === 'open', hay: (s.id + ' ' + s.title + ' ' + [...s.cves].join(' ')).toLowerCase(), run: () => { this.go(s.status === 'open' && s.level !== 'info' ? 'today' : 'signals'); if (s.status !== 'open') this.setState({ sstat: 'all' }); this.openSig(s.id); } }));
+    const sigs = E.sortSignals(st.signals).map(s => ({ key: 's-' + s.id, group: 'Signals', icon: E.LV[s.level].icon, label: s.id, sub: s.title, open: s.status === 'open', hay: (s.id + ' ' + s.title + ' ' + [...s.cves].join(' ')).toLowerCase(), run: () => { this.go(s.status === 'open' && s.level !== 'info' ? 'today' : 'signals'); if (this.state.tlv && this.state.tlv !== s.level) this.setState({ tlv: s.level }); if (s.status !== 'open') this.setState({ sstat: 'all' }); this.openSig(s.id); } }));
     const prods = st.inv.map(p => ({ key: 'p-' + p.id, group: 'Products', icon: (E.MODELS[p.model] || {}).icon || 'package', label: p.name, sub: p.vendor + (p.version ? ' · ' + p.version : ''), hay: (p.name + ' ' + p.vendor + ' ' + p.cpe).toLowerCase(), run: () => { this.go('products'); this.editProduct(p.id); } }));
     const m = x => (x.hay || (x.label + ' ' + x.sub).toLowerCase()).includes(q);
     if (!q) return [...pages, ...acts.slice(0, 7), ...sigs.filter(s => s.open).slice(0, 5)];
@@ -1711,7 +1746,7 @@ class Component extends DCLogic {
     for (const s of st.signals) { const i = idx[E.fmtFull(s.createdAt)]; if (i != null && days[i].c[s.level] != null) days[i].c[s.level]++; }
     const max = Math.max(1, ...days.map(d => LVS.reduce((a, l) => a + d.c[l], 0)));
     const lmax = Object.fromEntries(LVS.map(l => [l, Math.max(1, ...days.map(d => d.c[l]))]));
-    const sparks = Object.fromEntries(LVS.map(l => [l, days.map(d => ({ h: Math.round(d.c[l] / lmax[l] * 100) + '%', c: d.c[l] ? LS(l).fg : 'light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))' }))]));
+    const sparks = Object.fromEntries(LVS.map(l => [l, days.map(d => ({ h: Math.round(d.c[l] / lmax[l] * 100) + '%', n: d.c[l], c: d.c[l] ? LS(l).fg : 'light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))' }))]));
     const cTrend = days.map(d => ({ tip: d.label + ' · ' + LVS.map(l => E.LV[l].label + ' ' + d.c[l]).join(' · '), today: d.key === today ? 'light-dark(rgba(37,99,168,.07),rgba(90,160,230,.08))' : 'transparent', segs: LVS.filter(l => d.c[l]).map(l => ({ h: (d.c[l] / max * 100) + '%', c: LS(l).fg })) }));
     const tot = Object.fromEntries(LVS.map(l => [l, days.reduce((a, d) => a + d.c[l], 0)]));
     // pipeline today
@@ -1777,7 +1812,7 @@ class Component extends DCLogic {
       runIcon: S.run && !S.run.done ? 'hourglass' : 'play', runLabel: S.run && !S.run.done ? 'Running' : 'Run now', runBusy: !!(S.run && !S.run.done) || !ready,
       runNow: () => this.runNow(), runOpen: !!S.run, closeRun: () => this.setState({ run: S.run && S.run.done ? null : S.run }),
     };
-    if (!ready) return { ...base, nav: [], rpDots: [], tTiles: [], tGroups: [], tLanes: [], rpName: '', rpChip: '', rpHead: '', rpHeadIcon: 'circle', meName: '', meInit: '', clockDay: '', clockTime: '', lrLabel: '', nextLabel: '', lrDot: 'transparent', tNew: '', tUpd: '', tRouted: '', tHidden: '', rowPad: '11px 12px', tListMode: true, d: {}, showCharts: false, cFunnel: [], cTrend: [], cLegend: [], cSteps: [], cOwners: [] };
+    if (!ready) return { ...base, nav: [], rpDots: [], tTiles: [], tGroups: [], tLanes: [], rpName: '', rpChip: '', rpHead: '', rpHeadIcon: 'circle', meName: '', meInit: '', clockDay: '', clockTime: '', lrLabel: '', nextLabel: '', lrDot: 'transparent', tNew: '', tUpd: '', tRouted: '', tHidden: '', rowPad: '11px 12px', queuePad: '8px 12px', tListMode: true, d: {}, showCharts: false, cFunnel: [], cTrend: [], cLegend: [], cSteps: [], cOwners: [] };
 
     const lay = this.props.todayLayout || 'Queue';
     const dense = (this.props.density || 'Comfortable') === 'Compact';
@@ -1798,17 +1833,31 @@ class Component extends DCLogic {
 
     // Today
     const tl = this.todayList();
-    const rows = tl.map((s, i) => this.row(s, i, hints));
+    const pg = this.todayPage(tl.length), pgN = this.pageCount(tl.length);
+    const shown = lay === 'Lanes' ? tl : tl.slice(pg * this.PAGE, (pg + 1) * this.PAGE);
+    const selShown = shown.some(s => s.id === S.sel);
+    const rows = shown.map((s, i) => ({ ...this.row(s, i, hints), tab: selShown ? (s.id === S.sel ? 0 : -1) : i === 0 ? 0 : -1 }));
+    const qLv = S.tlv ? E.LV[S.tlv] : null, qLabel = qLv ? qLv.label : 'All';
+    const qAll = (S.tlv ? [S.tlv] : ['act', 'plan', 'watch']).reduce((a, l) => a + st.counts[l], 0);
     const LS = l => this.lvStyle(l);
     const tGroups = lay === 'Brief'
-      ? ['act', 'plan', 'watch', 'info'].map(l => ({ label: E.LV[l].label, icon: E.LV[l].icon, fg: LS(l).fg, showHeader: true, rows: rows.filter(r => r.level === l) })).filter(g => g.rows.length).map(g => ({ ...g, count: String(g.rows.length) }))
+      ? ['act', 'plan', 'watch', 'info'].map(l => ({ label: E.LV[l].label, icon: E.LV[l].icon, fg: LS(l).fg, showHeader: true, rows: rows.filter(r => r.level === l) })).filter(g => g.rows.length).map(g => ({ ...g, count: String(tl.filter(s => E.LV[s.level].label === g.label).length) }))
       : [{ label: 'Queue', showHeader: false, rows, count: '' }];
     const laneLv = S.tlv ? [S.tlv] : ['act', 'plan', 'watch'];
     const tLanes = laneLv.map(l => { const rs = rows.filter(r => r.level === l); return { label: E.LV[l].label, icon: E.LV[l].icon, fg: LS(l).fg, rows: rs, count: String(rs.length), empty: !rs.length }; });
     const dayKey = E.fmtFull(st.now);
     const done = E.sortSignals(st.signals.filter(s => s.status !== 'open' && s.lastDecision && !s.lastDecision.fixture && E.fmtFull(s.lastDecision.at) === dayKey));
     const cv = this.chartVals(st, LS, ACC, MUTE);
-    const tTiles = ['act', 'plan', 'watch', 'info'].map(l => { const on = S.tlv === l, c = LS(l); return { spark: cv.sparks[l], label: E.LV[l].label, icon: E.LV[l].icon, weight: l === 'act' && st.open.act ? 'fill' : '', count: String(st.open[l]), sub: st.counts[l] + ' total', aria: E.LV[l].label + ' ' + st.open[l], fg: c.fg, pressed: on, bg: on ? 'light-dark(#e9f1fa,#1a2531)' : 'light-dark(#f1f4f7,#1d2229)', ring: on ? '0 0 0 1px ' + c.fg + ', 0 0 20px -8px ' + c.fg : 'none', onClick: () => this.setState({ tlv: on ? null : l, sel: null }) }; });
+    const tTiles = ['act', 'plan', 'watch', 'info'].map(l => {
+      const on = S.tlv === l, c = LS(l);
+      return {
+        spark: on ? cv.sparks[l].map(x => ({ h: x.h, c: x.n ? '#fff' : 'rgba(255,255,255,.35)' })) : cv.sparks[l],
+        label: E.LV[l].label, icon: E.LV[l].icon, weight: on || (l === 'act' && st.open.act) ? 'fill' : '', count: String(st.open[l]), sub: st.counts[l] + ' total', aria: E.LV[l].label + ' ' + st.open[l], pressed: on,
+        bg: on ? c.solid : 'light-dark(#fff,#1d2229)', fg: on ? '#fff' : c.fg, tx: on ? '#fff' : 'inherit', subFg: on ? '#fff' : 'light-dark(#343a44,#aab2bf)',
+        ring: on ? '0 4px 14px -6px ' + c.solid : '0 0 0 1px light-dark(#858d9b,#6f7785), 0 1px 2px rgba(17,20,24,.08)',
+        onClick: () => this.setState({ tlv: on ? null : l, tpg: 0, sel: null }),
+      };
+    });
 
     // drawer
     const dk = S.drawer && S.drawer.kind;
@@ -1831,9 +1880,12 @@ class Component extends DCLogic {
       nextLabel: st.isLive ? (this.live && this.live.meta && this.live.meta.nextRun ? (this.live.meta.nextRun - Date.now() < 15 * 6e4 ? 'Due' : E.fmtDay(this.live.meta.nextRun).split(' ')[0] + ' ' + E.fmtTime(this.live.meta.nextRun)) : 'Off') : st.nextRun ? E.fmtDay(st.nextRun.at).split(' ')[0] + ' ' + E.fmtTime(st.nextRun.at) : 'End',
       runTitle: run && run.has ? (run.done ? 'Run done' : 'Running') : 'Up to date', runWhen: run ? E.fmtDay(run.at) + ' · ' + E.fmtTime(run.at) : '',
       runPct: run ? Math.round((run.done ? 7 : run.stage) / 7 * 100) + '%' : '0%', runStages,
-      rowPad: dense ? '7px 10px' : '11px 12px',
+      rowPad: dense ? '7px 10px' : '11px 12px', queuePad: dense ? '5px 10px' : '8px 12px',
       tNew: String(lr.created), tUpd: String(lr.updated), tRouted: String(lr.routed), tHidden: String(st.hiddenToday),
-      tTiles, tGroups, tLanes, tListMode: lay !== 'Lanes', tIsLanes: lay === 'Lanes', tEmpty: rows.length === 0,
+      tTiles, tGroups, tLanes, tListMode: lay !== 'Lanes', tIsLanes: lay === 'Lanes', tEmpty: tl.length === 0,
+      qLabel, qIcon: qLv ? qLv.icon : 'list-dashes', qFg: S.tlv ? LS(S.tlv).fg : 'inherit', qEmpty: qLv ? 'No open ' + qLabel + ' signals' : 'All clear',
+      qTotal: qLabel + ': ' + (tl.length === qAll ? '' : tl.length + ' open of ') + qAll + ' total', qPage: 'Page ' + (pg + 1) + ' of ' + pgN,
+      qFirst: pg === 0, qLast: pg >= pgN - 1, qPrev: () => this.setPage(pg - 1), qNext: () => this.setPage(pg + 1), qOpenSignals: () => this.openInSignals(),
       tHasDone: done.length > 0, tDoneCount: String(done.length), doneOpen: S.doneOpen, doneIcon: S.doneOpen ? 'caret-down' : 'caret-right', toggleDone: () => this.setState({ doneOpen: !S.doneOpen }),
       tDone: done.map(s => { const L = E.LV[s.level], c = LS(s.level), D = E.DECISIONS[s.status]; return { title: s.title, lvLabel: L.label, lvIcon: L.icon, lvBg: c.bg, lvTx: c.tx, stLabel: D.label, stIcon: D.icon, open: () => this.openSig(s.id) }; }),
       dSig: !!ds, d,
