@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-NZ">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,10 +17,11 @@
 <script src="/icons.js"></script>
 <style>
 html,body{margin:0;height:100%}
-body{font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;background:#111418}
+body{font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;background:light-dark(#eef1f5,#111418)}
 *,*::before,*::after{box-sizing:border-box}
 button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
 button{cursor:pointer}
+h1,h2{text-wrap:balance}
 button:disabled{opacity:.45;cursor:not-allowed}
 :focus{outline:none}
 :focus-visible{outline:2px solid light-dark(#2563a8,#5aa0e6);outline-offset:2px}
@@ -31,7 +32,7 @@ input[type=range]{accent-color:#5aa0e6}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </helmet>
-<div style="color-scheme:{{ scheme }};height:100vh;display:grid;grid-template-columns:auto minmax(0,1fr);background:light-dark(#eef1f5,#111418);color:light-dark(#111418,#e9e9ed);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;overflow:hidden">
+<div style="color-scheme:{{ scheme }};height:100dvh;display:grid;grid-template-columns:auto minmax(0,1fr);background:light-dark(#eef1f5,#111418);color:light-dark(#111418,#e9e9ed);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;overflow:hidden">
 <a href="#sw-main" style="position:absolute;left:12px;top:-60px;z-index:200;padding:8px 12px;border-radius:8px;background:light-dark(#fbfcfd,#1a1e24);box-shadow:0 0 0 1px light-dark(#2563a8,#5aa0e6)" style-focus="top:12px">Skip to main</a>
 
 <nav aria-label="Primary" style="width:{{ sideW }};display:flex;flex-direction:column;gap:3px;padding:14px 10px;border-right:1px solid light-dark(rgba(17,20,24,.08),rgba(233,233,237,.07));overflow:hidden auto;transition:width .18s ease">
@@ -69,20 +70,30 @@ input[type=range]{accent-color:#5aa0e6}
 </nav>
 
 <div style="display:grid;grid-template-rows:56px minmax(0,1fr);min-width:0;min-height:0">
-  <header style="display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid light-dark(rgba(17,20,24,.08),rgba(233,233,237,.07));min-width:0">
-    <button onClick="{{ openPal }}" aria-label="Search and commands" style="display:flex;align-items:center;gap:8px;height:34px;width:min(380px,48%);padding:0 8px 0 10px;border-radius:8px;border:1px solid light-dark(rgba(17,20,24,.14),rgba(233,233,237,.14));background:light-dark(#fbfcfd,#1a1e24);color:light-dark(#555d6b,#8d95a3);font-size:13px" style-hover="border-color:light-dark(rgba(17,20,24,.3),rgba(233,233,237,.3))">
-      <sw-icon name="magnifying-glass" size="16"></sw-icon><span style="flex:1;text-align:left;white-space:nowrap;overflow:hidden">Search</span>
-      <span style="display:inline-grid;place-items:center;height:20px;padding:0 6px;border-radius:4px;border:1px solid light-dark(rgba(17,20,24,.2),rgba(233,233,237,.22));font-size:11px;font-weight:500">Ctrl K</span>
+  <header style="display:flex;align-items:center;gap:{{ hdGap }};padding:0 {{ hdPad }};border-bottom:1px solid light-dark(rgba(17,20,24,.08),rgba(233,233,237,.07));min-width:0">
+    <button onClick="{{ openPal }}" aria-label="Search and commands" title="Search (Ctrl K)" style="flex:{{ searchFlex }};display:flex;align-items:center;justify-content:center;gap:8px;height:36px;min-width:36px;padding:0 8px 0 10px;border-radius:8px;border:1px solid light-dark(rgba(17,20,24,.14),rgba(233,233,237,.14));background:light-dark(#fbfcfd,#1a1e24);color:light-dark(#555d6b,#8d95a3);font-size:13px" style-hover="border-color:light-dark(rgba(17,20,24,.3),rgba(233,233,237,.3))">
+      <sw-icon name="magnifying-glass" size="16"></sw-icon>
+      <sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}">
+        <span style="flex:1;text-align:left;white-space:nowrap;overflow:hidden">Search</span>
+        <span style="flex:none;display:inline-grid;place-items:center;height:20px;padding:0 6px;border-radius:4px;border:1px solid light-dark(rgba(17,20,24,.2),rgba(233,233,237,.22));font-size:11px;font-weight:500;white-space:nowrap">Ctrl K</span>
+      </sc-if>
     </button>
     <div style="flex:1"></div>
-    <div role="status" aria-live="polite" style="display:flex;align-items:center;gap:8px;font-size:12px;color:light-dark(#555d6b,#8d95a3);white-space:nowrap;min-width:0;overflow:hidden">
-      <span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:{{ lrDot }};box-shadow:0 0 8px {{ lrDot }}"></span>
-      <span style="font-variant-numeric:tabular-nums">{{ lrLabel }}</span>
-      <sc-if value="{{ lrWarn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(oklch(0.93 0.035 25),oklch(0.33 0.07 25));color:light-dark(oklch(0.42 0.13 25),oklch(0.93 0.04 25))"><sw-icon name="warning" size="12"></sw-icon>{{ lrWarnText }}</span></sc-if>
-      <sc-if value="{{ notNarrow }}" hint-placeholder-val="{{ true }}"><span style="font-variant-numeric:tabular-nums">Next {{ nextLabel }}</span></sc-if>
+    <div role="group" aria-label="Source sync" style="flex:none;display:flex;align-items:center;gap:10px;font-size:12px;color:light-dark(#555d6b,#aab2bf);white-space:nowrap;font-variant-numeric:tabular-nums">
+      <span title="{{ lrTitle }}" style="display:inline-flex;align-items:center;gap:8px">
+        <span aria-hidden="true" style="flex:none;width:7px;height:7px;border-radius:50%;background:{{ lrDot }};box-shadow:0 0 8px {{ lrDot }}"></span>
+        <span style="display:inline-flex;flex-direction:{{ lrDir }};gap:0 4px;line-height:1.3"><span>Last sync</span><span style="font-weight:500;color:light-dark(#22272e,#e9e9ed)">{{ lrTime }}</span></span>
+        <sc-if value="{{ lrShowAgo }}" hint-placeholder-val="{{ false }}"><span>{{ lrAgo }}</span></sc-if>
+      </span>
+      <sc-if value="{{ lrStale }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(oklch(0.93 0.045 80),oklch(0.34 0.06 75));color:light-dark(oklch(0.4 0.09 70),oklch(0.94 0.05 80))"><sw-icon name="clock" size="12"></sw-icon>Overdue</span></sc-if>
+      <sc-if value="{{ lrWarn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goReplay }}" title="Open Sources" aria-label="{{ lrWarnAria }}" style="display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border:0;border-radius:6px;font-size:11px;font-weight:500;white-space:nowrap;background:light-dark(oklch(0.93 0.035 25),oklch(0.33 0.07 25));color:light-dark(oklch(0.42 0.13 25),oklch(0.93 0.04 25))" style-hover="box-shadow:inset 0 0 0 1px currentColor"><sw-icon name="warning" size="12"></sw-icon>{{ lrWarnText }}</button></sc-if>
+      <sc-if value="{{ notNarrow }}" hint-placeholder-val="{{ true }}">
+        <span aria-hidden="true" style="width:1px;height:14px;background:light-dark(rgba(17,20,24,.16),rgba(233,233,237,.18))"></span>
+        <span>Next sync <span style="font-weight:500;color:light-dark(#22272e,#e9e9ed)">{{ nextLabel }}</span></span>
+      </sc-if>
     </div>
-    <button onClick="{{ openHelp }}" aria-label="Shortcuts" title="Shortcuts" style="display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:8px;background:transparent" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.07))"><sw-icon name="keyboard" size="18"></sw-icon></button>
-    <button onClick="{{ runNow }}" disabled="{{ runBusy }}" aria-label="Run now" style="display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:13px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))" style-active="background:light-dark(rgba(37,99,168,.22),rgba(90,160,230,.22))"><sw-icon name="{{ runIcon }}" size="16"></sw-icon>{{ runLabel }}</button>
+    <sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openHelp }}" aria-label="Shortcuts" title="Shortcuts (?)" style="flex:none;display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:8px;background:transparent" style-hover="background:light-dark(rgba(17,20,24,.06),rgba(233,233,237,.07))"><sw-icon name="keyboard" size="18"></sw-icon></button></sc-if>
+    <button onClick="{{ runNow }}" disabled="{{ runBusy }}" aria-label="{{ runLabel }}" title="{{ runLabel }}" style="flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;min-width:36px;padding:0 {{ runPad }};transition:transform .12s;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:13px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))" style-active="background:light-dark(rgba(37,99,168,.22),rgba(90,160,230,.22));transform:scale(.96)"><sw-icon name="{{ runIcon }}" size="16"></sw-icon><sc-if value="{{ notPhone }}" hint-placeholder-val="{{ true }}"><span>{{ runLabel }}</span></sc-if></button>
   </header>
 
   <main id="sw-main" tabIndex="-1" style="overflow:auto;min-height:0;scroll-padding:24px 0">
@@ -91,20 +102,21 @@ input[type=range]{accent-color:#5aa0e6}
     </sc-if>
 
     <sc-if value="{{ pToday }}" hint-placeholder-val="{{ true }}">
-    <section aria-labelledby="h-today" style="padding:22px {{ padR }} 48px 28px;max-width:{{ maxW }};display:flex;flex-direction:column;gap:18px">
-      <div style="position:relative;overflow:hidden;border-radius:14px;padding:18px 20px 20px;background:linear-gradient(180deg,light-dark(#f7f9fb,#1c2128),light-dark(#fbfcfd,#171b21));box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),#2a3039);display:flex;flex-direction:column;gap:16px">
+    <section aria-labelledby="h-today" style="padding:{{ padT }} {{ padR }} 48px {{ padL }};max-width:{{ maxW }};display:flex;flex-direction:column;gap:18px">
+      <div style="position:relative;overflow:hidden;border-radius:14px;padding:{{ heroPad }};background:linear-gradient(180deg,light-dark(#f7f9fb,#1c2128),light-dark(#fbfcfd,#171b21));box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.09),#2a3039);display:flex;flex-direction:column;gap:16px">
         <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
           <h1 id="h-today" style="margin:0;font-size:25px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Today</h1>
           <span style="font-size:14px;color:light-dark(#343a44,#cdd3dc);font-variant-numeric:tabular-nums">{{ clockDay }}</span>
           <span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;letter-spacing:.02em;box-shadow:inset 0 0 0 1px light-dark(rgba(29,58,88,.35),rgba(185,214,245,.35));color:light-dark(#1d3a58,#dde9f6)"><sw-icon name="{{ rpHeadIcon }}" size="12"></sw-icon>{{ rpChip }}</span>
           <div style="flex:1"></div>
-          <div style="display:flex;gap:14px;font-size:12px;color:light-dark(#343a44,#cdd3dc);font-variant-numeric:tabular-nums;flex-wrap:wrap">
+          <div role="group" aria-label="Last sync" style="display:flex;gap:6px 14px;font-size:12px;color:light-dark(#343a44,#cdd3dc);font-variant-numeric:tabular-nums;flex-wrap:wrap">
+            <span style="color:light-dark(#555d6b,#aab2bf)">Last sync</span>
             <span style="display:inline-flex;align-items:center;gap:5px"><sw-icon name="sparkle" size="14"></sw-icon>New {{ tNew }}</span>
             <span style="display:inline-flex;align-items:center;gap:5px"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Updated {{ tUpd }}</span>
             <span style="display:inline-flex;align-items:center;gap:5px"><sw-icon name="paper-plane-tilt" size="14"></sw-icon>Routed {{ tRouted }}</span>
           </div>
         </div>
-        <div role="group" aria-label="Levels" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px">
+        <div role="group" aria-label="Levels" style="display:grid;grid-template-columns:repeat(auto-fit,minmax({{ tileMin }},1fr));gap:10px">
           <sc-for list="{{ tTiles }}" as="tl" hint-placeholder-count="4">
             <button onClick="{{ tl.onClick }}" aria-pressed="{{ tl.pressed }}" aria-label="{{ tl.aria }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px;border-radius:8px;border:0;background-color:{{ tl.bg }};color:{{ tl.tx }};box-shadow:{{ tl.ring }};text-align:left;transition:transform .15s" style-hover="background-image:linear-gradient(light-dark(rgba(17,20,24,.06),rgba(233,233,237,.08)) 0 0)" style-active="transform:scale(.96)">
               <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:{{ tl.fg }}"><sw-icon name="{{ tl.icon }}" size="16" weight="{{ tl.weight }}"></sw-icon>{{ tl.label }}</span>
@@ -135,24 +147,24 @@ input[type=range]{accent-color:#5aa0e6}
               <div style="display:flex;align-items:center;gap:8px;padding:2px 12px 6px;color:{{ g.fg }}"><sw-icon name="{{ g.icon }}" size="16"></sw-icon><h2 style="margin:0;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase">{{ g.label }}</h2><span style="font-size:12px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ g.count }}</span></div>
             </sc-if>
             <sc-for list="{{ g.rows }}" as="row" hint-placeholder-count="6">
-              <div id="{{ row.domId }}" role="option" aria-selected="{{ row.sel }}" tabIndex="{{ row.tab }}" onClick="{{ row.open }}" onFocus="{{ row.select }}" style="display:grid;grid-template-columns:70px minmax(0,1fr);gap:12px;align-items:start;padding:{{ queuePad }};border-radius:8px;cursor:pointer;background-color:{{ row.bgc }};background-image:{{ row.bgi }};background-repeat:no-repeat;background-position:bottom;background-size:100% 1px;box-shadow:{{ row.ring }};transition:background-color .12s,box-shadow .12s" style-hover="background-color:light-dark(rgba(17,20,24,.045),rgba(233,233,237,.045))">
+              <div id="{{ row.domId }}" role="option" aria-selected="{{ row.sel }}" tabIndex="{{ row.tab }}" onClick="{{ row.open }}" onFocus="{{ row.select }}" style="display:grid;grid-template-columns:{{ queueCols }};gap:{{ queueGap }};align-items:start;padding:{{ queuePad }};border-radius:8px;cursor:pointer;background-color:{{ row.bgc }};background-image:{{ row.bgi }};background-repeat:no-repeat;background-position:bottom;background-size:100% 1px;box-shadow:{{ row.ring }};transition:background-color .12s,box-shadow .12s" style-hover="background-color:light-dark(rgba(17,20,24,.045),rgba(233,233,237,.045))">
                 <span style="justify-self:start;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;background:{{ row.lvBg }};color:{{ row.lvTx }};white-space:nowrap"><sw-icon name="{{ row.lvIcon }}" size="14"></sw-icon>{{ row.lvLabel }}</span>
                 <span style="min-width:0;display:flex;flex-direction:column;gap:2px">
-                  <span style="display:flex;align-items:flex-start;gap:10px;min-width:0">
-                    <span style="font-size:14px;font-weight:500;line-height:1.38;min-width:0;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty">{{ row.title }}</span>
+                  <span style="display:flex;align-items:flex-start;flex-wrap:{{ queueWrap }};gap:6px 10px;min-width:0">
+                    <span title="{{ row.title }}" style="font-size:14px;font-weight:500;line-height:1.38;min-width:0;flex:{{ titleFlex }};display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty">{{ row.title }}</span>
                     <sc-if value="{{ row.hasActBy }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums;background:{{ row.abBg }};color:{{ row.abTx }};box-shadow:inset 0 0 0 1px {{ row.abLine }}"><sw-icon name="calendar" size="12"></sw-icon>{{ row.actBy }}</span></sc-if>
                     <sc-if value="{{ row.isDone }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf);white-space:nowrap"><sw-icon name="{{ row.stIcon }}" size="14"></sw-icon>{{ row.stLabel }}</span></sc-if>
                   </span>
                   <span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-height:26px;min-width:0">
-                    <span style="flex:1 1 100px;min-width:0;display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap;font-size:12px;color:light-dark(#555d6b,#8d95a3)">
+                    <span style="flex:1 1 100px;min-width:0;display:flex;flex-wrap:{{ queueWrap }};align-items:center;gap:4px 8px;overflow:hidden;white-space:nowrap;font-size:12px;color:light-dark(#555d6b,#8d95a3)">
                       <sc-if value="{{ row.updated }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd)"><sw-icon name="arrows-clockwise" size="12"></sw-icon>Updated</span></sc-if>
                       <sc-if value="{{ row.isNew }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;box-shadow:inset 0 0 0 1px light-dark(#2563a8,#5aa0e6);color:light-dark(#1d4f86,#b9d6f5)">New</span></sc-if>
                       <sc-if value="{{ row.merged }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)"><sw-icon name="git-merge" size="12"></sw-icon>Merged</span></sc-if>
                       <sc-if value="{{ row.flagged }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(oklch(0.93 0.045 80),oklch(0.34 0.06 75));color:light-dark(oklch(0.4 0.09 70),oklch(0.94 0.05 80))"><sw-icon name="robot" size="12"></sw-icon>AI review</span></sc-if>
                       <sc-if value="{{ row.sample }}" hint-placeholder-val="{{ false }}"><span style="flex:none;display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;border:1px dashed light-dark(rgba(17,20,24,.32),rgba(233,233,237,.32));color:light-dark(#555d6b,#aab2bf)">Sample</span></sc-if>
                       <span style="flex:none;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;color:light-dark(#343a44,#cdd3dc)">{{ row.ids }}</span>
-                      <span style="flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:5px"><sw-icon name="{{ row.prodIcon }}" size="13"></sw-icon><span style="min-width:0;overflow:hidden;text-overflow:ellipsis">{{ row.prods }}</span></span>
-                      <span style="flex:none;display:inline-flex;align-items:center;gap:5px"><sc-for list="{{ row.srcIcons }}" as="si" hint-placeholder-count="2"><span title="{{ si.label }}" style="display:inline-flex"><sw-icon name="{{ si.icon }}" size="13"></sw-icon></span></sc-for><span style="font-variant-numeric:tabular-nums">{{ row.srcN }}</span></span>
+                      <span style="flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:5px"><sw-icon name="{{ row.prodIcon }}" size="13"></sw-icon><span title="{{ row.prodsFull }}" style="min-width:0;overflow:hidden;text-overflow:ellipsis">{{ row.prods }}</span></span>
+                      <span style="flex:none;display:inline-flex;align-items:center;gap:5px"><sc-for list="{{ row.srcIcons }}" as="si" hint-placeholder-count="2"><span title="{{ si.label }}" style="display:inline-flex"><sw-icon name="{{ si.icon }}" size="13"></sw-icon></span></sc-for><span title="{{ row.srcText }}" style="font-variant-numeric:tabular-nums">{{ row.srcN }}</span></span>
                       <span style="flex:none;font-variant-numeric:tabular-nums">{{ row.when }}</span>
                     </span>
                     <sc-if value="{{ row.showActs }}" hint-placeholder-val="{{ false }}">
@@ -188,7 +200,7 @@ input[type=range]{accent-color:#5aa0e6}
       <sc-if value="{{ showCharts }}" hint-placeholder-val="{{ true }}">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(max(min(100%,230px),calc(50% - 6px)),1fr));grid-auto-rows:1fr;gap:12px;min-width:0">
         <figure aria-label="{{ cFunnelAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
-          <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="funnel-simple" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">Pipeline</span><span style="flex:1"></span><span style="font-size:11px">Today · log</span></figcaption>
+          <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="funnel-simple" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">Pipeline</span><span style="flex:1"></span><span style="font-size:11px">Today · log scale</span></figcaption>
           <div style="display:flex;flex-direction:column;gap:8px">
             <sc-for list="{{ cFunnel }}" as="f" hint-placeholder-count="5">
               <div style="display:grid;grid-template-columns:74px minmax(0,1fr) 40px;gap:10px;align-items:center;font-size:12px">
@@ -201,7 +213,7 @@ input[type=range]{accent-color:#5aa0e6}
         </figure>
 
         <figure aria-label="{{ cTrendAria }}" style="margin:0;display:flex;flex-direction:column;gap:10px;min-width:0;padding:14px 16px;border-radius:14px;background:light-dark(#fbfcfd,#171b21);box-shadow:0 0 0 1px light-dark(rgba(17,20,24,.08),#2a3039)">
-          <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="chart-bar" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">New signals</span><span style="flex:1"></span><span style="font-size:11px">14 d</span></figcaption>
+          <figcaption style="display:flex;align-items:center;gap:8px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="chart-bar" size="15"></sw-icon><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500">New signals</span><span style="flex:1"></span><span style="font-size:11px">14 days</span></figcaption>
           <div style="position:relative;display:flex;align-items:flex-end;gap:4px;height:92px;padding-top:4px;background:linear-gradient(to top,light-dark(rgba(17,20,24,.08),rgba(233,233,237,.07)) 1px,transparent 1px) 0 0/100% 33.33%">
             <sc-for list="{{ cTrend }}" as="tc" hint-placeholder-count="14">
               <div title="{{ tc.tip }}" style="flex:1;height:100%;display:flex;flex-direction:column-reverse;gap:1px;border-radius:2px;background:{{ tc.today }}">
@@ -221,7 +233,7 @@ input[type=range]{accent-color:#5aa0e6}
             <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:22px;font-weight:500;font-variant-numeric:tabular-nums">{{ cItems }}</span><span style="font-size:11px;color:light-dark(#555d6b,#8d95a3)">Items</span></span>
             <sw-icon name="arrow-right" size="16"></sw-icon>
             <span style="display:flex;flex-direction:column;line-height:1.1"><span style="font-size:22px;font-weight:500;font-variant-numeric:tabular-nums">{{ cSigs }}</span><span style="font-size:11px;color:light-dark(#555d6b,#8d95a3)">Signals</span></span>
-            <span style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd);font-variant-numeric:tabular-nums">{{ cRatio }}</span>
+            <span title="Items per signal" style="margin-left:auto;display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:500;background:light-dark(#dde9f6,#1d3a58);color:light-dark(#1d3a58,#eef5fd);font-variant-numeric:tabular-nums">{{ cRatio }}</span>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
             <sc-for list="{{ cSteps }}" as="cs" hint-placeholder-count="6">
@@ -306,7 +318,7 @@ input[type=range]{accent-color:#5aa0e6}
     </section>
     </sc-if>
     <sc-if value="{{ pSignals }}" hint-placeholder-val="{{ false }}">
-    <section aria-labelledby="h-sig" style="padding:22px {{ padR }} 48px 28px;max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
+    <section aria-labelledby="h-sig" style="padding:{{ padT }} {{ padR }} 48px {{ padL }};max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
         <h1 id="h-sig" style="margin:0;font-size:25px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Signals</h1>
         <span style="font-size:13px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ sCount }}</span>
@@ -342,7 +354,7 @@ input[type=range]{accent-color:#5aa0e6}
               <span style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;font-size:12px;color:light-dark(#555d6b,#8d95a3)">
                 <span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;color:light-dark(#343a44,#cdd3dc)">{{ row.ids }}</span>
                 <span style="display:inline-flex;align-items:center;gap:5px"><sw-icon name="{{ row.prodIcon }}" size="13"></sw-icon>{{ row.prods }}</span>
-                <span style="display:inline-flex;align-items:center;gap:5px"><sc-for list="{{ row.srcIcons }}" as="si" hint-placeholder-count="2"><span title="{{ si.label }}" style="display:inline-flex"><sw-icon name="{{ si.icon }}" size="13"></sw-icon></span></sc-for><span style="font-variant-numeric:tabular-nums">{{ row.srcN }}</span></span>
+                <span style="display:inline-flex;align-items:center;gap:5px"><sc-for list="{{ row.srcIcons }}" as="si" hint-placeholder-count="2"><span title="{{ si.label }}" style="display:inline-flex"><sw-icon name="{{ si.icon }}" size="13"></sw-icon></span></sc-for><span style="font-variant-numeric:tabular-nums">{{ row.srcText }}</span></span>
                 <span style="font-variant-numeric:tabular-nums">{{ row.when }}</span>
               </span>
             </span>
@@ -365,7 +377,7 @@ input[type=range]{accent-color:#5aa0e6}
     </sc-if>
 
     <sc-if value="{{ pProducts }}" hint-placeholder-val="{{ false }}">
-    <section aria-labelledby="h-prod" style="padding:22px {{ padR }} 48px 28px;max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
+    <section aria-labelledby="h-prod" style="padding:{{ padT }} {{ padR }} 48px {{ padL }};max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
         <h1 id="h-prod" style="margin:0;font-size:25px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Products</h1>
         <span style="font-size:13px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ prCount }}</span>
@@ -407,7 +419,7 @@ input[type=range]{accent-color:#5aa0e6}
     </section>
     </sc-if>
     <sc-if value="{{ pSources }}" hint-placeholder-val="{{ false }}">
-    <section aria-labelledby="h-src" style="padding:22px {{ padR }} 48px 28px;max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
+    <section aria-labelledby="h-src" style="padding:{{ padT }} {{ padR }} 48px {{ padL }};max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
         <h1 id="h-src" style="margin:0;font-size:25px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Sources</h1>
         <span style="font-size:13px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ soCount }}</span>
@@ -476,7 +488,7 @@ input[type=range]{accent-color:#5aa0e6}
     </sc-if>
 
     <sc-if value="{{ pDecisions }}" hint-placeholder-val="{{ false }}">
-    <section aria-labelledby="h-dec" style="padding:22px {{ padR }} 48px 28px;max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
+    <section aria-labelledby="h-dec" style="padding:{{ padT }} {{ padR }} 48px {{ padL }};max-width:{{ maxW }};display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
         <h1 id="h-dec" style="margin:0;font-size:25px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Decisions</h1>
         <span style="font-size:13px;color:light-dark(#555d6b,#8d95a3);font-variant-numeric:tabular-nums">{{ deCount }}</span>
@@ -512,7 +524,7 @@ input[type=range]{accent-color:#5aa0e6}
     </section>
     </sc-if>
     <sc-if value="{{ pSettings }}" hint-placeholder-val="{{ false }}">
-    <section aria-labelledby="h-set" style="padding:22px {{ padR }} 48px 28px;max-width:{{ maxW }};display:flex;flex-direction:column;gap:16px">
+    <section aria-labelledby="h-set" style="padding:{{ padT }} {{ padR }} 48px {{ padL }};max-width:{{ maxW }};display:flex;flex-direction:column;gap:16px">
       <h1 id="h-set" style="margin:0;font-size:25px;font-weight:500;letter-spacing:-.015em;line-height:1.12">Settings</h1>
       <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
         <nav aria-label="Settings" style="flex:0 1 190px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0">
@@ -643,7 +655,7 @@ input[type=range]{accent-color:#5aa0e6}
               <div style="display:flex;align-items:center;gap:12px"><sw-icon name="arrows-clockwise" size="18"></sw-icon><span style="flex:1;font-weight:500">Two-way</span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)">{{ syncSent }}</span><button role="switch" aria-checked="{{ sw.syncSentinel.on }}" aria-label="Sentinel two-way sync" onClick="{{ sw.syncSentinel.toggle }}" style="position:relative;width:36px;height:20px;border-radius:10px;border:0;padding:0;background:{{ sw.syncSentinel.bg }}"><span style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:light-dark(#fbfcfd,#e9e9ed);transform:{{ sw.syncSentinel.x }};transition:transform .15s"></span></button></div>
               <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf)">Workspace resource ID<input value="{{ v.wsResource }}" onChange="{{ on.wsResource }}" placeholder="/subscriptions/…/workspaces/…" style="height:34px;padding:0 10px;border-radius:8px;border:1px solid light-dark(rgba(17,20,24,.18),rgba(233,233,237,.16));background:light-dark(#eef1f5,#111418);font-size:12.5px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;min-width:0;color:light-dark(#111418,#e9e9ed)"></label>
               <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-right" size="13"></sw-icon>Out</span><sc-for list="{{ syncMapSOut }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-left" size="13"></sw-icon>In</span><sc-for list="{{ syncMapSIn }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button onClick="{{ syncNow }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Sync now</button><span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">{{ syncLast }}</span></div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button onClick="{{ syncNow }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Sync now</button><span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">Last two-way sync {{ syncLast }}</span></div>
             </div>
             <div style="display:flex;flex-wrap:wrap;gap:4px"><sc-for list="{{ dcrCols }}" as="dc" hint-placeholder-count="12"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))"><span style="font-weight:500">{{ dc.n }}</span><span style="font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:light-dark(#555d6b,#8d95a3)">{{ dc.t }}</span></span></sc-for></div>
             <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:light-dark(#555d6b,#8d95a3)">Analytics rule</span><pre style="margin:0;padding:12px 14px;border-radius:8px;background:light-dark(#eef1f5,#111418);font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere">{{ kql }}</pre></div>
@@ -669,7 +681,7 @@ input[type=range]{accent-color:#5aa0e6}
               <div style="display:flex;align-items:center;gap:12px"><sw-icon name="arrows-clockwise" size="18"></sw-icon><span style="flex:1;font-weight:500">Two-way</span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;font-weight:500;background:light-dark(#e3e7ed,#343a44);color:light-dark(#22272e,#fbfcfd)">{{ syncTick }}</span><button role="switch" aria-checked="{{ sw.syncTickets.on }}" aria-label="Ticket two-way sync" onClick="{{ sw.syncTickets.toggle }}" style="position:relative;width:36px;height:20px;border-radius:10px;border:0;padding:0;background:{{ sw.syncTickets.bg }}"><span style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:light-dark(#fbfcfd,#e9e9ed);transform:{{ sw.syncTickets.x }};transition:transform .15s"></span></button></div>
               <label style="display:flex;flex-direction:column;gap:5px;font-size:12px;color:light-dark(#555d6b,#aab2bf)">Close value<input value="{{ v.ticketClose }}" onChange="{{ on.ticketClose }}" placeholder="{{ ticketClosePh }}" style="height:34px;padding:0 10px;border-radius:8px;border:1px solid light-dark(rgba(17,20,24,.18),rgba(233,233,237,.16));background:light-dark(#eef1f5,#111418);font-size:12.5px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;min-width:0;color:light-dark(#111418,#e9e9ed)"></label>
               <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-right" size="13"></sw-icon>Out</span><sc-for list="{{ syncMapTOut }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:4px;width:40px;font-size:12px;color:light-dark(#555d6b,#8d95a3)"><sw-icon name="arrow-left" size="13"></sw-icon>In</span><sc-for list="{{ syncMapTIn }}" as="sm" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:6px;font-size:11.5px;box-shadow:inset 0 0 0 1px light-dark(rgba(17,20,24,.12),rgba(233,233,237,.12))">{{ sm.a }}<sw-icon name="arrow-right" size="11"></sw-icon>{{ sm.b }}</span></sc-for></div>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button onClick="{{ syncNow }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Sync now</button><span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">{{ syncLast }}</span></div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button onClick="{{ syncNow }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:8px;border:1px solid light-dark(#2563a8,#5aa0e6);background:transparent;color:light-dark(#1d4f86,#5aa0e6);font-size:12px;font-weight:500;white-space:nowrap" style-hover="background:light-dark(rgba(37,99,168,.12),rgba(90,160,230,.12))"><sw-icon name="arrows-clockwise" size="14"></sw-icon>Sync now</button><span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">Last two-way sync {{ syncLast }}</span></div>
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
               <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:light-dark(#555d6b,#8d95a3)">Template</span><pre style="margin:0;padding:12px 14px;border-radius:8px;background:light-dark(#eef1f5,#111418);font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere">{{ ticketTpl }}</pre></div>
@@ -1032,12 +1044,12 @@ input[type=range]{accent-color:#5aa0e6}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;todayLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Queue&quot;,&quot;Brief&quot;,&quot;Lanes&quot;],&quot;default&quot;:&quot;Queue&quot;,&quot;tsType&quot;:&quot;'Queue' | 'Brief' | 'Lanes'&quot;,&quot;section&quot;:&quot;Today&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Comfortable&quot;,&quot;Compact&quot;],&quot;default&quot;:&quot;Comfortable&quot;,&quot;tsType&quot;:&quot;'Comfortable' | 'Compact'&quot;,&quot;section&quot;:&quot;Today&quot;},&quot;showCharts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Today&quot;},&quot;keyHints&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Today&quot;}}">
 class Component extends DCLogic {
-  state = { ready: false, store: null, st: null, live: false, theme: 'dark', page: 'today', sel: null, drawer: null, pal: false, pq: '', pi: 0, help: false, run: null, toasts: [], doneOpen: false, sq: '', slv: { act: true, plan: true, watch: true, info: true }, sstat: 'open', ssrc: 'all', prq: '', pmodel: 'all', df: 'all', tlv: 'act', tpg: 0, narrow: false, wide: false, collapsed: false, stab: 'levels', form: null, imp: null, nsf: null, srcTest: {}, tests: null, testsMs: 0, sentTest: '', tickTest: '' };
+  state = { ready: false, store: null, st: null, live: false, theme: 'dark', page: 'today', sel: null, drawer: null, pal: false, pq: '', pi: 0, help: false, run: null, toasts: [], phone: window.innerWidth < 560, doneOpen: false, sq: '', slv: { act: true, plan: true, watch: true, info: true }, sstat: 'open', ssrc: 'all', prq: '', pmodel: 'all', df: 'all', tlv: 'act', tpg: 0, narrow: window.innerWidth < 980, wide: window.innerWidth >= 1320, collapsed: false, stab: 'levels', form: null, imp: null, nsf: null, srcTest: {}, tests: null, testsMs: 0, sentTest: '', tickTest: '' };
   K = 'signalwatch.pov.v1';
 
   componentDidMount() {
     this._key = e => this.onKey(e);
-    this._rs = () => this.setState({ narrow: window.innerWidth < 980, wide: window.innerWidth >= 1320 });
+    this._rs = () => this.setState({ narrow: window.innerWidth < 980, phone: window.innerWidth < 560, wide: window.innerWidth >= 1320 });
     window.addEventListener('keydown', this._key);
     window.addEventListener('resize', this._rs);
     this._mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -1045,7 +1057,7 @@ class Component extends DCLogic {
     if (this._mq.addEventListener) this._mq.addEventListener('change', this._mqh);
     let theme = 'dark';
     try { theme = localStorage.getItem('signalwatch.theme') || 'dark'; } catch (e) {}
-    this.setState({ theme, narrow: window.innerWidth < 980, wide: window.innerWidth >= 1320 }, () => this.applyTheme());
+    this.setState({ theme }, () => this.applyTheme());
     Promise.all([import('./engine.js'), import('./tests.js')]).then(async ([E, T]) => {
       this.E = E; this.T = T;
       let store = null, ws = 'live';
@@ -1058,6 +1070,8 @@ class Component extends DCLogic {
     // Pick up other people's decisions and scheduled runs when the tab comes back.
     this._vis = () => { if (document.visibilityState === 'visible' && this.isLive() && !(this.state.run && !this.state.run.done)) this.refreshLive(); };
     document.addEventListener('visibilitychange', this._vis);
+    // Keep the clock and the sync age current in a tab left open.
+    this._clk = setInterval(() => { if (document.visibilityState === 'visible' && this.isLive()) this.forceUpdate(); }, 30000);
   }
   // ── live workspace (D1 via /api) ──
   async api(method, path, body) {
@@ -1139,6 +1153,20 @@ class Component extends DCLogic {
   }
   // A decision is synced in the background; read the result back shortly after.
   syncSoon() { if (!this.isLive()) return; clearTimeout(this._syt); this._syt = setTimeout(() => this.refreshLive(), 1500); }
+  // Header status. "Sync" here is the source run; the two-way incident and ticket sync has its own line in Settings.
+  syncStatus(st, lr, LS, ACC, MUTE) {
+    const E = this.E, S = this.state, now = st.isLive ? Date.now() : st.now, age = now - lr.at;
+    if (lr.mode === 'None') return { lrTime: 'never', lrAgo: '', lrShowAgo: false, lrStale: false, lrWarn: false, lrWarnText: '', lrWarnAria: '', lrDot: MUTE, lrTitle: 'Sources have not synced yet' };
+    const today = E.fmtFull(lr.at) === E.fmtFull(now), stale = st.isLive && !!(this.live && this.live.meta && this.live.meta.nextRun) && age > 26 * 36e5;
+    const failed = lr.warn + (lr.warn === 1 ? ' source' : ' sources') + ' failed';
+    return {
+      lrTime: (today ? '' : (age < 6 * E.DAY ? E.fmtDay(lr.at).split(' ')[0] : E.fmtDate(lr.at)) + ' ') + E.fmtTime(lr.at),
+      lrAgo: E.fmtAgo(lr.at, now) + ' ago', lrShowAgo: st.isLive && S.wide, lrStale: stale && !S.phone && !(S.narrow && lr.warn),
+      lrWarn: lr.warn > 0, lrWarnText: S.phone ? String(lr.warn) : S.narrow ? lr.warn + ' failed' : failed, lrWarnAria: failed + '. Open Sources',
+      lrDot: lr.warn ? LS('act').fg : stale ? LS('plan').fg : ACC,
+      lrTitle: 'Sources synced ' + E.fmtDay(lr.at) + ' · ' + E.fmtTime(lr.at) + ' · ' + lr.mode,
+    };
+  }
   schedLabel(src) { return src.schedule === 'Daily' ? 'Daily ' + this.state.st.S.schedule : src.schedule; }
   lastStat(id) { const runs = this.state.st.runs; for (let i = runs.length - 1; i >= 0; i--) if (runs[i].src && runs[i].src[id]) return { r: runs[i].src[id], at: runs[i].at }; return null; }
   // Settings and inventory follow the store; decisions and sources go through their own endpoints.
@@ -1157,7 +1185,7 @@ class Component extends DCLogic {
     window.removeEventListener('keydown', this._key);
     window.removeEventListener('resize', this._rs);
     if (this._mq && this._mq.removeEventListener) this._mq.removeEventListener('change', this._mqh);
-    clearTimeout(this._rt); (this._tt || []).forEach(clearTimeout);
+    clearTimeout(this._rt); clearInterval(this._clk); (this._tt || []).forEach(clearTimeout);
     if (this._vis) document.removeEventListener('visibilitychange', this._vis);
   }
   commit(store, extra) {
@@ -1511,9 +1539,10 @@ class Component extends DCLogic {
       lvLabel: L.label, lvIcon: L.icon, lvBg: c.bg, lvTx: c.tx, lvFg: c.fg,
       ids: cv.length ? cv[0] + (cv.length > 1 ? ' +' + (cv.length - 1) : '') : ([...s.advs][0] || s.id),
       prods: prods.length ? prods.slice(0, 2).join(' · ') + (prods.length > 2 ? ' +' + (prods.length - 2) : '') : s.ev.peer ? 'NZ peer' : 'No match',
+      prodsFull: prods.join(' · '),
       prodIcon: prods.length ? 'package' : 'buildings',
-      srcIcons: srcs.slice(0, 5).map(x => ({ icon: x.icon, label: x.name })), srcN: String(s.items.length),
-      when: E.fmtAgo(s.lastAt, st.now),
+      srcIcons: srcs.slice(0, 5).map(x => ({ icon: x.icon, label: x.name })), srcN: String(s.items.length), srcText: s.items.length + (s.items.length === 1 ? ' item' : ' items'),
+      when: E.fmtAgo(s.lastAt, st.now) + ' ago',
       hasActBy: days != null && open, actBy: days == null ? '' : days < 0 ? 'Overdue ' + Math.abs(days) + ' d' : 'Act-by ' + days + ' d',
       abBg: soon ? c.bg : 'transparent', abTx: soon ? c.tx : 'light-dark(#343a44,#cdd3dc)', abLine: soon ? 'transparent' : 'light-dark(rgba(17,20,24,.16),rgba(233,233,237,.18))',
       updated: s.updated, isNew: s.isNew, sample: s.sample, flagged: s.flagged, merged: s.merged.length > 0 && s.updated,
@@ -1651,7 +1680,7 @@ class Component extends DCLogic {
       const SM = this.isLive() && this.live.meta && this.live.meta.sync, ML = { live: 'Live', sandbox: 'Sandbox', setup: 'Needs workspace', off: 'Off' }, ls = SM && SM.last;
       out.syncSent = SM ? ML[SM.sentinel] : V.syncSentinel ? 'Live' : 'Off';
       out.syncTick = SM ? ML[SM.tickets] : V.syncTickets ? 'Live' : 'Off';
-      out.syncLast = ls ? E.fmtTime(ls.at) + ' · ' + ls.in + ' in · ' + (ls.out + ls.notes) + ' out' + (ls.errors ? ' · ' + ls.errors + ' errors' : '') : '—';
+      out.syncLast = ls ? E.fmtTime(ls.at) + ' · ' + ls.in + ' in · ' + (ls.out + ls.notes) + ' out' + (ls.errors ? ' · ' + ls.errors + ' errors' : '') : 'never';
       out.syncNow = () => this.syncNow();
       const pairs = l => l.map(([a, b]) => ({ a, b }));
       out.syncMapSOut = pairs([['Not affected', 'Closed · Benign'], ['Ack · Ticket', 'Active'], ['Tickets done', 'Closed · TP'], ['Undo', 'Active']]);
@@ -1762,7 +1791,7 @@ class Component extends DCLogic {
     const steps = [0, 0, 0, 0, 0, 0]; let items = 0;
     for (const s of st.all) for (const i of s.items) { steps[(i.join && i.join.step) || 0]++; items++; }
     const smax = Math.max(1, ...steps), aiOn = st.S.ai && st.S.aiGroup;
-    const cSteps = [['flag-banner', 'New event'], ['fingerprint', 'Exact ID'], ['copy-simple', 'MinHash'], ['tag', 'Vendor+product'], ['graph', 'Embedding'], ['robot', 'Model']].map(([icon, label], n) => ({ icon, label, n: String(steps[n]), w: (steps[n] / smax * 100) + '%', c: n === 0 ? 'light-dark(#8d95a3,#6f7785)' : n === 5 ? LS('plan').fg : ACC, op: n >= 4 && !aiOn ? 0.45 : 1 }));
+    const cSteps = [['flag-banner', 'New event'], ['fingerprint', 'Exact ID'], ['copy-simple', 'MinHash'], ['tag', 'Vendor+product'], ['graph', 'Embedding'], ['robot', 'Model']].map(([icon, label], n) => ({ icon, label, n: n >= 4 && !aiOn ? 'Off' : String(steps[n]), w: (steps[n] / smax * 100) + '%', c: n === 0 ? 'light-dark(#8d95a3,#6f7785)' : n === 5 ? LS('plan').fg : ACC, op: n >= 4 && !aiOn ? 0.7 : 1 }));
     // owners
     const own = {};
     for (const s of st.signals) {
@@ -1795,7 +1824,7 @@ class Component extends DCLogic {
     const MUTE = 'light-dark(#555d6b,#8d95a3)';
     const base = {
       ready, notReady: !ready, scheme: S.theme === 'system' ? 'light dark' : S.theme,
-      sideW: collapsed ? '64px' : '232px', notCollapsed: !collapsed, notNarrow: !S.narrow, themeDir: collapsed ? 'column' : 'row',
+      sideW: collapsed ? '64px' : '232px', notCollapsed: !collapsed, notNarrow: !S.narrow, notPhone: !S.phone, themeDir: collapsed ? 'column' : 'row',
       sideIcon: collapsed ? 'caret-double-right' : 'caret-double-left', sideLabel: collapsed ? 'Expand' : 'Collapse',
       toggleSide: () => this.setState({ collapsed: !S.collapsed, narrow: false }),
       themes: [['light', 'Light', 'sun'], ['dark', 'Dark', 'moon'], ['system', 'Auto', 'circle-half']].map(([k, l, i]) => ({ label: l, icon: i, pressed: S.theme === k, bg: S.theme === k ? 'light-dark(rgba(37,99,168,.16),rgba(90,160,230,.18))' : 'transparent', fg: S.theme === k ? 'light-dark(#1d4f86,#b9d6f5)' : 'inherit', set: () => this.setTheme(k) })),
@@ -1804,15 +1833,18 @@ class Component extends DCLogic {
       openPal: () => this.openPal(), closePal: () => this.closePal(), openHelp: () => this.setState({ help: true }), closeHelp: () => this.setState({ help: false }),
       closeDrawer: () => this.closeDrawer(),
       dX: S.drawer ? 'translateX(0)' : 'translateX(104%)', dVis: S.drawer ? 'visible' : 'hidden', dHidden: !S.drawer,
-      padR: S.drawer && S.wide ? '588px' : '28px', maxW: S.drawer && S.wide ? '1820px' : '1240px',
+      lrDir: S.phone ? 'column' : 'row', hdGap: S.phone ? '8px' : '12px', hdPad: S.phone ? '12px' : '20px', searchFlex: S.phone ? '0 0 36px' : '0 1 380px', runPad: S.phone ? '0' : '14px',
+      padT: S.phone ? '14px' : '22px', padL: S.phone ? '14px' : '28px', heroPad: S.phone ? '14px' : '18px 20px 20px', tileMin: S.phone ? '108px' : '128px',
+      queueCols: S.phone ? 'minmax(0,1fr)' : '70px minmax(0,1fr)', queueGap: S.phone ? '6px' : '12px', queueWrap: S.phone ? 'wrap' : 'nowrap', titleFlex: S.phone ? '1 1 100%' : '1',
+      padR: S.drawer && S.wide ? '588px' : S.phone ? '14px' : '28px', maxW: S.drawer && S.wide ? '1820px' : '1240px',
       helpOpen: S.help, palOpen: S.pal,
       helpKeys: [[['J'], 'Next'], [['K'], 'Previous'], [['Enter'], 'Open'], [['Esc'], 'Close'], [['A'], 'Acknowledge'], [['N'], 'Not affected'], [['T'], 'Ticket'], [['U'], 'Undo'], [['Ctrl', 'K'], 'Palette'], [['?'], 'Shortcuts']].map(([k, l]) => ({ keys: k.map(x => ({ k: x })), label: l })),
       toasts: S.toasts.map(t => ({ id: t.id, icon: t.icon, label: t.label, detail: t.detail, hasUndo: !!t.undo, undo: () => { this.dropToast(t.id); if (t.undo) t.undo(); }, close: () => this.dropToast(t.id) })),
-      keyHints: (this.props.keyHints ?? true) && S.page === 'today',
+      keyHints: (this.props.keyHints ?? true) && S.page === 'today' && !S.phone,
       runIcon: S.run && !S.run.done ? 'hourglass' : 'play', runLabel: S.run && !S.run.done ? 'Running' : 'Run now', runBusy: !!(S.run && !S.run.done) || !ready,
       runNow: () => this.runNow(), runOpen: !!S.run, closeRun: () => this.setState({ run: S.run && S.run.done ? null : S.run }),
     };
-    if (!ready) return { ...base, nav: [], rpDots: [], tTiles: [], tGroups: [], tLanes: [], rpName: '', rpChip: '', rpHead: '', rpHeadIcon: 'circle', meName: '', meInit: '', clockDay: '', clockTime: '', lrLabel: '', nextLabel: '', lrDot: 'transparent', tNew: '', tUpd: '', tRouted: '', tHidden: '', rowPad: '11px 12px', queuePad: '8px 12px', tListMode: true, d: {}, showCharts: false, cFunnel: [], cTrend: [], cLegend: [], cSteps: [], cOwners: [] };
+    if (!ready) return { ...base, nav: [], rpDots: [], tTiles: [], tGroups: [], tLanes: [], rpName: '', rpChip: '', rpHead: '', rpHeadIcon: 'circle', meName: '', meInit: '', clockDay: '', clockTime: '', lrTime: '…', lrAgo: '', lrTitle: '', lrShowAgo: false, lrStale: false, nextLabel: '…', lrDot: 'transparent', tNew: '', tUpd: '', tRouted: '', tHidden: '', rowPad: '11px 12px', queuePad: '8px 12px', tListMode: true, d: {}, showCharts: false, cFunnel: [], cTrend: [], cLegend: [], cSteps: [], cOwners: [] };
 
     const lay = this.props.todayLayout || 'Queue';
     const dense = (this.props.density || 'Comfortable') === 'Compact';
@@ -1852,7 +1884,7 @@ class Component extends DCLogic {
       const on = S.tlv === l, c = LS(l);
       return {
         spark: on ? cv.sparks[l].map(x => ({ h: x.h, c: x.n ? '#fff' : 'rgba(255,255,255,.35)' })) : cv.sparks[l],
-        label: E.LV[l].label, icon: E.LV[l].icon, weight: on || (l === 'act' && st.open.act) ? 'fill' : '', count: String(st.open[l]), sub: st.counts[l] + ' total', aria: E.LV[l].label + ' ' + st.open[l], pressed: on,
+        label: E.LV[l].label, icon: E.LV[l].icon, weight: on || (l === 'act' && st.open.act) ? 'fill' : '', count: String(st.open[l]), sub: 'open · ' + st.counts[l] + ' total', aria: E.LV[l].label + ': ' + st.open[l] + ' open, ' + st.counts[l] + ' total', pressed: on,
         bg: on ? c.solid : 'light-dark(#fff,#1d2229)', fg: on ? '#fff' : c.fg, tx: on ? '#fff' : 'inherit', subFg: on ? '#fff' : 'light-dark(#343a44,#aab2bf)',
         ring: on ? '0 4px 14px -6px ' + c.solid : '0 0 0 1px light-dark(#858d9b,#6f7785), 0 1px 2px rgba(17,20,24,.08)',
         onClick: () => this.setState({ tlv: on ? null : l, tpg: 0, sel: null }),
@@ -1872,11 +1904,11 @@ class Component extends DCLogic {
     return {
       ...base, ...ext,
       nav, goReplay: () => this.go('sources'),
-      meName: this.meName(), meInit: this.meName().split(/[s@.]+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join(''),
-      rpHead: st.isLive ? 'Live' : 'Replay', rpHeadIcon: st.isLive ? 'broadcast' : 'clock-counter-clockwise',
+      meName: this.meName(), meInit: this.meName().split(/[\s@.]+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join(''),
+      rpHead: st.isLive ? 'Workspace' : 'Replay', rpHeadIcon: st.isLive ? 'broadcast' : 'clock-counter-clockwise',
       rpName: R.name, rpChip: st.isLive ? 'Live' : 'Replay · ' + R.short, rpDots: Array.from({ length: st.maxRun }, (_, i) => ({ bg: i < st.runIdx ? ACC : 'light-dark(rgba(17,20,24,.16),rgba(233,233,237,.16))' })),
       clockDay: E.fmtDay(st.isLive ? Date.now() : st.now), clockTime: E.fmtTime(st.isLive ? Date.now() : st.now),
-      lrLabel: 'Last ' + E.fmtTime(lr.at), lrWarn: lr.warn > 0, lrWarnText: lr.warn + ' warn', lrDot: lr.warn ? LS('act').fg : ACC,
+      ...this.syncStatus(st, lr, LS, ACC, MUTE),
       nextLabel: st.isLive ? (this.live && this.live.meta && this.live.meta.nextRun ? (this.live.meta.nextRun - Date.now() < 15 * 6e4 ? 'Due' : E.fmtDay(this.live.meta.nextRun).split(' ')[0] + ' ' + E.fmtTime(this.live.meta.nextRun)) : 'Off') : st.nextRun ? E.fmtDay(st.nextRun.at).split(' ')[0] + ' ' + E.fmtTime(st.nextRun.at) : 'End',
       runTitle: run && run.has ? (run.done ? 'Run done' : 'Running') : 'Up to date', runWhen: run ? E.fmtDay(run.at) + ' · ' + E.fmtTime(run.at) : '',
       runPct: run ? Math.round((run.done ? 7 : run.stage) / 7 * 100) + '%' : '0%', runStages,
